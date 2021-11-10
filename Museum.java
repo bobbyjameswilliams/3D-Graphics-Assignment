@@ -1,4 +1,3 @@
-import gmaths.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -6,29 +5,29 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class M04 extends JFrame implements ActionListener {
+public class Museum extends JFrame implements ActionListener {
 
   private static final int WIDTH = 1024;
   private static final int HEIGHT = 768;
   private static final Dimension dimension = new Dimension(WIDTH, HEIGHT);
   private GLCanvas canvas;
-  private M04_GLEventListener glEventListener;
+  private Museum_GLEventListener glEventListener;
   private final FPSAnimator animator;
   private Camera camera;
 
   public static void main(String[] args) {
-    M04 b1 = new M04("M04");
+    Museum b1 = new Museum("M04");
     b1.getContentPane().setPreferredSize(dimension);
     b1.pack();
     b1.setVisible(true);
   }
 
-  public M04(String textForTitleBar) {
+  public Museum(String textForTitleBar) {
     super(textForTitleBar);
     GLCapabilities glcapabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
     canvas = new GLCanvas(glcapabilities);
     camera = new Camera(Camera.DEFAULT_POSITION, Camera.DEFAULT_TARGET, Camera.DEFAULT_UP);
-    glEventListener = new M04_GLEventListener(camera);
+    glEventListener = new Museum_GLEventListener(camera);
     canvas.addGLEventListener(glEventListener);
     canvas.addMouseMotionListener(new MyMouseInput(camera));
     canvas.addKeyListener(new MyKeyboardInput(camera));
