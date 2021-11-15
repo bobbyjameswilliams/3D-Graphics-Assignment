@@ -117,7 +117,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Model floor, sphere, cube, cube2;
+  private Model floor, sphere, cube, cube2, backwall, sidewall;
   private Light light;
   private SGNode robotRoot;
   
@@ -137,14 +137,32 @@ public class Museum_GLEventListener implements GLEventListener {
         
     light = new Light(gl);
     light.setCamera(camera);
-    
-    Mesh mesh = new Mesh(gl, WallPane1.vertices.clone(), WallPane1.indices.clone());
+    float roomSize = 23;
+
+
+    Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
-    Mat4 modelMatrix = Mat4Transform.scale(16,16f,16);
-    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundY(90));
+    Mat4 modelMatrix = Mat4Transform.scale(roomSize,1f,roomSize);
+    //modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundY(90));
     floor = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
-    
+
+    mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+    shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
+    modelMatrix =  Mat4Transform.translate(0,(roomSize/2),-(roomSize/2));
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
+    backwall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
+
+    mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+    shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
+    modelMatrix =  Mat4Transform.translate(-(roomSize/2),(roomSize/2),0);
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundZ(-90));
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
+    sidewall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
+
     mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
     shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
     material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
@@ -262,6 +280,8 @@ public class Museum_GLEventListener implements GLEventListener {
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
     floor.render(gl);
+    backwall.render(gl);
+    sidewall.render(gl);
     if (animation) updateLeftArm();
     if (animation) updateRightArm();
     robotRoot.draw(gl);

@@ -6,10 +6,10 @@ public final class WallPane1 {
   // anticlockwise/counterclockwise ordering
 
   public static final float[] vertices = new float[] {  // x,y,z, nx,ny,nz, s,t
-          -0.5f, -0.5f, -0.5f,  -1, 0, 0,  0.0f, 0.0f,  // 0
-          -0.5f, -0.5f,  0.5f,  -1, 0, 0,  1.0f, 0.0f,  // 1
-          -0.5f,  0.5f, -0.5f,  -1, 0, 0,  0.0f, 1.0f,  // 2
-          -0.5f,  0.5f,  0.5f,  -1, 0, 0,  1.0f, 1.0f,  // 3
+          -0.5f, -0.5f, -0.5f,  -1, 0, 0,  0.0f, 0.0f,  // 0 #
+          -0.5f, -0.5f,  0.5f,  -1, 0, 0,  1.0f, 0.0f,  // 1 #
+          -0.5f,  0.5f, -0.5f,  -1, 0, 0,  0.0f, 1.0f,  // 2 #
+          -0.5f,  0.5f,  0.5f,  -1, 0, 0,  1.0f, 1.0f,  // 3 #
           0.5f, -0.5f, -0.5f,   1, 0, 0,  1.0f, 0.0f,  // 4
           0.5f, -0.5f,  0.5f,   1, 0, 0,  0.0f, 0.0f,  // 5
           0.5f,  0.5f, -0.5f,   1, 0, 0,  1.0f, 1.0f,  // 6
@@ -35,12 +35,12 @@ public final class WallPane1 {
   };
 
   public static final int[] indices =  new int[] {
-          //0,1,3, // x -ve
-          //3,2,0, // x -ve
+          0,1,3, // x -ve
+          3,2,0, // x -ve
           //4,6,7, // x +ve
           //7,5,4, // x +ve
-          9,13,15, // z +ve
-          15,11,9, // z +ve
+          //9,13,15, // z +ve
+          //15,11,9, // z +ve
           //8,10,14, // z -ve
           //14,12,8, // z -ve
           //16,20,21, // y -ve
