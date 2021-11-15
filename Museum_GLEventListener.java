@@ -127,6 +127,7 @@ public class Museum_GLEventListener implements GLEventListener {
   private void initialise(GL3 gl) {
     createRandomNumbers();
     int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
+    int[] wallTexture = TextureLibrary.loadTexture(gl, "textures/wallTexture.jpg");
     int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
     int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
     int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
@@ -153,15 +154,16 @@ public class Museum_GLEventListener implements GLEventListener {
     modelMatrix =  Mat4Transform.translate(0,(roomSize/2),-(roomSize/2));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
-    backwall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
+    backwall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, wallTexture);
 
     mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
     material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     modelMatrix =  Mat4Transform.translate(-(roomSize/2),(roomSize/2),0);
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundZ(-90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
-    sidewall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
+    sidewall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, wallTexture);
 
     mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
     shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
