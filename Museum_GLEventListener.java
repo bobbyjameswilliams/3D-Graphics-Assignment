@@ -1,12 +1,7 @@
 import gmaths.*;
 
-import java.nio.*;
-import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
-import com.jogamp.opengl.util.*;
-import com.jogamp.opengl.util.awt.*;
-import com.jogamp.opengl.util.glsl.*;
-  
+
 public class Museum_GLEventListener implements GLEventListener {
   
   private static final boolean DISPLAY_SHADERS = false;
@@ -143,10 +138,11 @@ public class Museum_GLEventListener implements GLEventListener {
     light = new Light(gl);
     light.setCamera(camera);
     
-    Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+    Mesh mesh = new Mesh(gl, WallPane1.vertices.clone(), WallPane1.indices.clone());
     Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
-    Mat4 modelMatrix = Mat4Transform.scale(16,1f,16);
+    Mat4 modelMatrix = Mat4Transform.scale(16,16f,16);
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundY(90));
     floor = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
     
     mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
@@ -265,7 +261,7 @@ public class Museum_GLEventListener implements GLEventListener {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
-    floor.render(gl); 
+    floor.render(gl);
     if (animation) updateLeftArm();
     if (animation) updateRightArm();
     robotRoot.draw(gl);

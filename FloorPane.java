@@ -1,4 +1,4 @@
-public final class TwoTriangles {
+public final class FloorPane {
   
   // ***************************************************
   /* THE DATA
