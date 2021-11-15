@@ -5,32 +5,33 @@ public final class WindowedWall {
    */
   // anticlockwise/counterclockwise ordering
   public static final float[] vertices = {      // position, colour, tex coords
-    -0.5f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // top left
-    -0.5f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // bottom left
-     0.5f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,  // bottom right
-     0.5f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,  // top right
+    -0.5f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  // 0 top left
+    -0.5f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // 1 bottom left
+     0.5f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f,  // 2 bottom right
+     0.5f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f,  // 3 top right
 
     // Extra Vertices for creating window
-    -0.25f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // top left
-    -0.25f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // bottom left
-    0.25f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // bottom right
-    0.25f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // top right
+    -0.25f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  0.25f, 1.0f,  // 4 top left
+    -0.25f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  0.25f, 0.0f,  // 5 bottom left
+    0.25f, 0.0f,  0.5f,  0.0f, 1.0f, 0.0f,  0.75f, 0.0f,  // 6 bottom right
+    0.25f, 0.0f, -0.5f,  0.0f, 1.0f, 0.0f,  0.75f, 1.0f,  // 7 top right
 
     // Window Vertices
-    -0.25f, 0.0f, -0.25f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // top left window
-    -0.25f, 0.0f,  0.25f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // bottom left window
-     0.25f, 0.0f,  0.25f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f,  // bottom right window
-     0.25f, 0.0f, -0.25f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f  // top right window
+    -0.25f, 0.0f, -0.25f,  0.0f, 1.0f, 0.0f,  0.25f, 0.75f,  // 8 top left window
+    -0.25f, 0.0f,  0.25f,  0.0f, 1.0f, 0.0f,  0.25f, 0.25f,  // 9 bottom left window
+     0.25f, 0.0f,  0.25f,  0.0f, 1.0f, 0.0f,  0.75f, 0.25f,  // 10 bottom right window
+     0.25f, 0.0f, -0.25f,  0.0f, 1.0f, 0.0f,  0.75f, 0.75f  // 11 top right window
   };
   
   public static final int[] indices = {         // Note that we start from 0!
-    0,4,5,
+    5,4,0,
     0,1,5,
     4,8,7,
-    7,11,8,
-    
-
-
+    7,8,11,
+    2,7,6,
+    2,3,7,
+    5,6,10,
+    9,5,10
   };
 
 }
