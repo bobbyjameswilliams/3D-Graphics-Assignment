@@ -117,7 +117,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Model floor, sphere, cube, cube2, backwall, sidewall;
+  private Model floor, sphere, cube, cube2, backwall, sidewall, windowView;
   private Light light;
   private SGNode robotRoot;
   
@@ -128,6 +128,7 @@ public class Museum_GLEventListener implements GLEventListener {
     createRandomNumbers();
     int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
     int[] wallTexture = TextureLibrary.loadTexture(gl, "textures/wallTexture.jpg");
+    int[] windowViewTexture = TextureLibrary.loadTexture(gl, "textures/windowView.jpg");
     int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
     int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
     int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
@@ -138,9 +139,11 @@ public class Museum_GLEventListener implements GLEventListener {
         
     light = new Light(gl);
     light.setCamera(camera);
-    float roomSize = 23;
+    float roomSize = 40;
+    float viewOffset = 12;
+    float relativeViewOffset = (roomSize/2) + viewOffset;
 
-
+    //floor
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
@@ -148,6 +151,7 @@ public class Museum_GLEventListener implements GLEventListener {
     //modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundY(90));
     floor = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
 
+    //back wall
     mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
     material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
@@ -156,6 +160,7 @@ public class Museum_GLEventListener implements GLEventListener {
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
     backwall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, wallTexture);
 
+    //windowed wall
     mesh = new Mesh(gl, WindowedWall.vertices.clone(), WindowedWall.indices.clone());
     shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
     material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
@@ -164,6 +169,17 @@ public class Museum_GLEventListener implements GLEventListener {
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundZ(-90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
     sidewall = new Model(gl, camera, light, shader, material, modelMatrix, mesh, wallTexture);
+
+    //sky box
+    mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+    shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    material = new Material(new Vec3(1f, 1f, 1f), new Vec3(1f, 1f, 1f), new Vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    modelMatrix =  Mat4Transform.translate(-relativeViewOffset,(roomSize/2),0);
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundZ(-90));
+    modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize * 2 ,1f,roomSize * 2)); ;
+    windowView = new Model(gl, camera, light, shader, material, modelMatrix, mesh, windowViewTexture);
+
 
     mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
     shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
@@ -284,6 +300,7 @@ public class Museum_GLEventListener implements GLEventListener {
     floor.render(gl);
     backwall.render(gl);
     sidewall.render(gl);
+    windowView.render(gl);
     if (animation) updateLeftArm();
     if (animation) updateRightArm();
     robotRoot.draw(gl);
