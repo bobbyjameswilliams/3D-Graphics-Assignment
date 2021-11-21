@@ -118,10 +118,17 @@ public class Museum_GLEventListener implements GLEventListener {
   private Model floor, sphere, eye, cube, backwall, sidewall, windowView;
   private Light light;
   private SGNode robotRoot;
-  
   private float xPosition = 0;
   private TransformNode translateX, robotMoveTranslate, leftArmRotate, rightArmRotate;
   
+  private Model initialise_floor(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
+    Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
+    Mat4 modelMatrix = Mat4Transform.scale(roomSize,1f,roomSize);
+    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture);
+  }
+
   private Model initialise_backwall(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, DoorWall.vertices.clone(), DoorWall.indices.clone());
     Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
@@ -170,63 +177,15 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
-  private void initialise(GL3 gl) {
-    createRandomNumbers();
-    int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
-    int[] wallTexture = TextureLibrary.loadTexture(gl, "textures/wallTexture.jpg");
-    int[] windowViewTexture = TextureLibrary.loadTexture(gl, "textures/windowView.jpg");
-    int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
-    int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
-    int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
-    int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
-    int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/ven0aaa2.jpg");
-    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg.jpg");
-    
-        
-    light = new Light(gl);
-    light.setCamera(camera);
-    float roomSize = 40;
-    float viewOffset = 12;
-    float relativeViewOffset = (roomSize/2) + viewOffset;
+  private Model initialise_eye(GL3 gl, Camera camera, Light light, int[] texture1, int[] texture2){
+    Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
+    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+    Mat4 modelMatrix = new Mat4(1);
+    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+  }
 
-    //floor
-    Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
-    Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
-    Mat4 modelMatrix = Mat4Transform.scale(roomSize,1f,roomSize);
-    //modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundY(90));
-    floor = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
-
-    //back wall
-    backwall = initialise_backwall(gl, camera, light, wallTexture, roomSize);
-    //windowed wall
-    sidewall = initialise_sidewall(gl, camera, light, wallTexture, roomSize);
-    //sky box
-    windowView = initialise_skybox(gl, camera, light, windowViewTexture, roomSize, relativeViewOffset) ;
-    //#################### ROBOT!!! ###############################
-
-    //robot body
-    sphere = initialise_sphere(gl,camera,light,textureId1,textureId2);
-
-
-    cube = initialise_cube(gl,camera,light,textureId1,textureId2);
-
-    mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-    shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
-    material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
-    modelMatrix = new Mat4(1);
-    eye = new Model(gl, camera, light, shader, material, modelMatrix, mesh, wallTexture, textureId6);
-//
-//    mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-//    shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
-//    material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
-//    modelMatrix = Mat4.multiply(Mat4Transform.scale(4,4,4), Mat4Transform.translate(0,0.5f,0));
-//    cube = new Model(gl, camera, light, shader, material, modelMatrix, mesh, textureId3, textureId4);
-//
-//    cube2 = new Model(gl, camera, light, shader, material, modelMatrix, mesh, textureId5, textureId6);
-//
-//    // robot
-//
+  private void robot_scene(GL3 gl){
     float bodyHeight = 3f;
     float bodyWidth = 2f;
     float bodyDepth = 1f;
@@ -272,13 +231,13 @@ public class Museum_GLEventListener implements GLEventListener {
 
     NameNode rightArm = new NameNode("right arm");
     TransformNode rightArmTranslate = new TransformNode("rightarm translate",
-                                          Mat4Transform.translate(-(bodyScale/2),bodyHeight,0));
+            Mat4Transform.translate(-(bodyScale/2),bodyHeight,0));
     rightArmRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundZ(120));
     m = new Mat4(1);
     m = Mat4.multiply(m, Mat4Transform.scale(armScale,armLength,armScale));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
     TransformNode rightArmScale = new TransformNode("rightarm scale", m);
-      ModelNode rightArmShape = new ModelNode("Cube(right arm)", cube);
+    ModelNode rightArmShape = new ModelNode("Cube(right arm)", cube);
 
     NameNode leftArm = new NameNode("left arm");
     TransformNode leftArmTranslate = new TransformNode("leftarm translate",
@@ -291,98 +250,69 @@ public class Museum_GLEventListener implements GLEventListener {
     ModelNode leftArmShape = new ModelNode("Cube(left arm)", cube);
 
     robotRoot.addChild(robotMoveTranslate);
-      robotMoveTranslate.addChild(robotTranslate);
-        robotTranslate.addChild(body);
-            body.addChild(bodyTransform);
-            bodyTransform.addChild(bodyShape);
-          body.addChild(head);
-            head.addChild(headTransform);
-            headTransform.addChild(headShape);
-              head.addChild(leftEye);
-                leftEye.addChild(leftEyeTransform);
-                leftEyeTransform.addChild(leftEyeShape);
-            head.addChild(rightEye);
-              rightEye.addChild(rightEyeTransform);
-              rightEyeTransform.addChild(rightEyeShape);
-          body.addChild(rightArm);
-            rightArm.addChild(rightArmTranslate);
-            rightArmTranslate.addChild(rightArmRotate);
-            rightArmRotate.addChild(rightArmScale);
-            rightArmScale.addChild(rightArmShape);
-          body.addChild(leftArm);
-            leftArm.addChild(leftArmTranslate);
-            leftArmTranslate.addChild(leftArmRotate);
-            leftArmRotate.addChild(leftArmScale);
-            leftArmScale.addChild(leftArmShape);
-//    NameNode body = new NameNode("body");
-//      Mat4 m = Mat4Transform.scale(bodyWidth,bodyHeight,bodyDepth);
-//      m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
-//      TransformNode bodyTransform = new TransformNode("body transform", m);
-//        ModelNode bodyShape = new ModelNode("Cube(body)", cube);
+    robotMoveTranslate.addChild(robotTranslate);
+    robotTranslate.addChild(body);
+    body.addChild(bodyTransform);
+    bodyTransform.addChild(bodyShape);
+    body.addChild(head);
+    head.addChild(headTransform);
+    headTransform.addChild(headShape);
+    head.addChild(leftEye);
+    leftEye.addChild(leftEyeTransform);
+    leftEyeTransform.addChild(leftEyeShape);
+    head.addChild(rightEye);
+    rightEye.addChild(rightEyeTransform);
+    rightEyeTransform.addChild(rightEyeShape);
+    body.addChild(rightArm);
+    rightArm.addChild(rightArmTranslate);
+    rightArmTranslate.addChild(rightArmRotate);
+    rightArmRotate.addChild(rightArmScale);
+    rightArmScale.addChild(rightArmShape);
+    body.addChild(leftArm);
+    leftArm.addChild(leftArmTranslate);
+    leftArmTranslate.addChild(leftArmRotate);
+    leftArmRotate.addChild(leftArmScale);
+    leftArmScale.addChild(leftArmShape);
+  }
+
+  private void initialise(GL3 gl) {
+    createRandomNumbers();
+    int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
+    int[] wallTexture = TextureLibrary.loadTexture(gl, "textures/wallTexture.jpg");
+    int[] windowViewTexture = TextureLibrary.loadTexture(gl, "textures/windowView.jpg");
+    int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
+    int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
+    int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
+    int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
+    int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/ven0aaa2.jpg");
+    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg.jpg");
+    
+        
+    light = new Light(gl);
+    light.setCamera(camera);
+    float roomSize = 40;
+    float viewOffset = 12;
+    float relativeViewOffset = (roomSize/2) + viewOffset;
+
+    //floor
+    floor = initialise_floor(gl, camera, light, woodFloorTexture, roomSize);
+    //back wall
+    backwall = initialise_backwall(gl, camera, light, wallTexture, roomSize);
+    //windowed wall
+    sidewall = initialise_sidewall(gl, camera, light, wallTexture, roomSize);
+    //sky box
+    windowView = initialise_skybox(gl, camera, light, windowViewTexture, roomSize, relativeViewOffset) ;
+
+
+    //#################### ROBOT!!! ###############################
+    //robot body
+    sphere = initialise_sphere(gl,camera,light,textureId1,textureId2);
+    cube = initialise_cube(gl,camera,light,textureId1,textureId2);
+    eye = initialise_eye(gl,camera,light,wallTexture,textureId6);
 //
-//   NameNode leftarm = new NameNode("left arm");
-//      TransformNode leftArmTranslate = new TransformNode("leftarm translate",
-//                                           Mat4Transform.translate((bodyWidth*0.5f)+(armScale*0.5f),bodyHeight,0));
-//      leftArmRotate = new TransformNode("leftarm rotate",Mat4Transform.rotateAroundX(180));
-//      m = new Mat4(1);
-//      m = Mat4.multiply(m, Mat4Transform.scale(armScale,armLength,armScale));
-//      m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
-//      TransformNode leftArmScale = new TransformNode("leftarm scale", m);
-//        ModelNode leftArmShape = new ModelNode("Cube(left arm)", cube2);
+//    // robot
 //
-//    NameNode rightarm = new NameNode("right arm");
-//      TransformNode rightArmTranslate = new TransformNode("rightarm translate",
-//                                            Mat4Transform.translate(-(bodyWidth*0.5f)-(armScale*0.5f),bodyHeight,0));
-//      rightArmRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundX(180));
-//      m = new Mat4(1);
-//      m = Mat4.multiply(m, Mat4Transform.scale(armScale,armLength,armScale));
-//      m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
-//      TransformNode rightArmScale = new TransformNode("rightarm scale", m);
-//        ModelNode rightArmShape = new ModelNode("Cube(right arm)", cube2);
-//
-//    NameNode leftleg = new NameNode("left leg");
-//      m = new Mat4(1);
-//      m = Mat4.multiply(m, Mat4Transform.translate((bodyWidth*0.5f)-(legScale*0.5f),0,0));
-//      m = Mat4.multiply(m, Mat4Transform.rotateAroundX(180));
-//      m = Mat4.multiply(m, Mat4Transform.scale(legScale,legLength,legScale));
-//      m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
-//      TransformNode leftlegTransform = new TransformNode("leftleg transform", m);
-//        ModelNode leftLegShape = new ModelNode("Cube(leftleg)", cube);
-//
-//    NameNode rightleg = new NameNode("right leg");
-//      m = new Mat4(1);
-//      m = Mat4.multiply(m, Mat4Transform.translate(-(bodyWidth*0.5f)+(legScale*0.5f),0,0));
-//      m = Mat4.multiply(m, Mat4Transform.rotateAroundX(180));
-//      m = Mat4.multiply(m, Mat4Transform.scale(legScale,legLength,legScale));
-//      m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
-//      TransformNode rightlegTransform = new TransformNode("rightleg transform", m);
-//        ModelNode rightLegShape = new ModelNode("Cube(rightleg)", cube);
-//
-//    robotRoot.addChild(robotMoveTranslate);
-//      robotMoveTranslate.addChild(robotTranslate);
-//        robotTranslate.addChild(body);
-//          body.addChild(bodyTransform);
-//            bodyTransform.addChild(bodyShape);
-//          body.addChild(head);
-//            head.addChild(headTransform);
-//            headTransform.addChild(headShape);
-//          body.addChild(leftarm);
-//            leftarm.addChild(leftArmTranslate);
-//            leftArmTranslate.addChild(leftArmRotate);
-//            leftArmRotate.addChild(leftArmScale);
-//            leftArmScale.addChild(leftArmShape);
-//          body.addChild(rightarm);
-//            rightarm.addChild(rightArmTranslate);
-//            rightArmTranslate.addChild(rightArmRotate);
-//            rightArmRotate.addChild(rightArmScale);
-//            rightArmScale.addChild(rightArmShape);
-//          body.addChild(leftleg);
-//            leftleg.addChild(leftlegTransform);
-//            leftlegTransform.addChild(leftLegShape);
-//          body.addChild(rightleg);
-//            rightleg.addChild(rightlegTransform);
-//            rightlegTransform.addChild(rightLegShape);
-//
+    robot_scene(gl);
     robotRoot.update();  // IMPORTANT - don't forget this
     robotRoot.print(0, false);
     //System.exit(0);
