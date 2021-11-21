@@ -150,7 +150,7 @@ public class Museum_GLEventListener implements GLEventListener {
     floor = new Model(gl, camera, light, shader, material, modelMatrix, mesh, woodFloorTexture);
 
     //back wall
-    mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+    mesh = new Mesh(gl, DoorWall.vertices.clone(), DoorWall.indices.clone());
     shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
     material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     modelMatrix =  Mat4Transform.translate(0,(roomSize/2),-(roomSize/2));
