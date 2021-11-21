@@ -217,8 +217,8 @@ public class Museum_GLEventListener implements GLEventListener {
     float bodyScale = 5f;
     float headScale = 4f;
     float eyeScale = 0.5f;
-//    float armLength = 3.5f;
-//    float armScale = 0.5f;
+    float armLength = 3.5f;
+    float armScale = 0.5f;
     float legLength = 3.5f;
 //    float legScale = 0.67f;
 //
@@ -249,23 +249,55 @@ public class Museum_GLEventListener implements GLEventListener {
 
     NameNode rightEye = new NameNode("rightEye");
     m = new Mat4(1);
-    m = Mat4.multiply(m,Mat4Transform.translate(-(headScale/3),(bodyScale + (headScale/1.5f)),(headScale/2)));
+    m = Mat4.multiply(m,Mat4Transform.translate((headScale/3),(bodyScale + (headScale/1.5f)),(headScale/2)));
     m = Mat4.multiply(m, Mat4Transform.scale(eyeScale, eyeScale, eyeScale));
     TransformNode rightEyeTransform = new TransformNode("head transform", m);
     ModelNode rightEyeShape = new ModelNode("Sphere(eye)", eye);
 
+    NameNode rightArm = new NameNode("right arm");
+    TransformNode rightArmTranslate = new TransformNode("rightarm translate",
+                                          Mat4Transform.translate(-(bodyScale/2),bodyHeight,0));
+    rightArmRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundZ(120));
+    m = new Mat4(1);
+    m = Mat4.multiply(m, Mat4Transform.scale(armScale,armLength,armScale));
+    m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
+    TransformNode rightArmScale = new TransformNode("rightarm scale", m);
+      ModelNode rightArmShape = new ModelNode("Cube(right arm)", cube);
+
+    NameNode leftArm = new NameNode("left arm");
+    TransformNode leftArmTranslate = new TransformNode("leftarm translate",
+            Mat4Transform.translate((bodyScale/2),bodyHeight,0));
+    leftArmRotate = new TransformNode("leftarm rotate",Mat4Transform.rotateAroundZ(-120));
+    m = new Mat4(1);
+    m = Mat4.multiply(m, Mat4Transform.scale(armScale,armLength,armScale));
+    m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
+    TransformNode leftArmScale = new TransformNode("leftarm scale", m);
+    ModelNode leftArmShape = new ModelNode("Cube(left arm)", cube);
+
     robotRoot.addChild(robotMoveTranslate);
       robotMoveTranslate.addChild(robotTranslate);
         robotTranslate.addChild(body);
-          body.addChild(bodyTransform);
+            body.addChild(bodyTransform);
             bodyTransform.addChild(bodyShape);
           body.addChild(head);
             head.addChild(headTransform);
-              headTransform.addChild(headShape);
-            head.addChild(leftEye);
-              leftEye.addChild(leftEyeTransform);
+            headTransform.addChild(headShape);
+              head.addChild(leftEye);
+                leftEye.addChild(leftEyeTransform);
                 leftEyeTransform.addChild(leftEyeShape);
-
+            head.addChild(rightEye);
+              rightEye.addChild(rightEyeTransform);
+              rightEyeTransform.addChild(rightEyeShape);
+          body.addChild(rightArm);
+            rightArm.addChild(rightArmTranslate);
+            rightArmTranslate.addChild(rightArmRotate);
+            rightArmRotate.addChild(rightArmScale);
+            rightArmScale.addChild(rightArmShape);
+          body.addChild(leftArm);
+            leftArm.addChild(leftArmTranslate);
+            leftArmTranslate.addChild(leftArmRotate);
+            leftArmRotate.addChild(leftArmScale);
+            leftArmScale.addChild(leftArmShape);
 //    NameNode body = new NameNode("body");
 //      Mat4 m = Mat4Transform.scale(bodyWidth,bodyHeight,bodyDepth);
 //      m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
