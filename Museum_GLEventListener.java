@@ -115,7 +115,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Model floor, sphere, cube, cube2, backwall, sidewall, windowView;
+  private Model floor, sphere, eye, cube, backwall, sidewall, windowView;
   private Light light;
   private SGNode robotRoot;
   
@@ -131,8 +131,8 @@ public class Museum_GLEventListener implements GLEventListener {
     int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
     int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
     int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
-    int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/wattBook.jpg");
-    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/wattBook_specular.jpg");
+    int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/ven0aaa2.jpg");
+    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg.jpg");
     
         
     light = new Light(gl);
@@ -184,9 +184,22 @@ public class Museum_GLEventListener implements GLEventListener {
 
     mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
     shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
-    material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+    material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     modelMatrix = new Mat4(1);
     sphere = new Model(gl, camera, light, shader, material, modelMatrix, mesh, textureId1, textureId2);
+
+    mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
+    shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+    modelMatrix = new Mat4(1);
+    cube = new Model(gl, camera, light, shader, material, modelMatrix, mesh, textureId1, textureId2);
+
+
+    mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
+    shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+    modelMatrix = new Mat4(1);
+    eye = new Model(gl, camera, light, shader, material, modelMatrix, mesh, wallTexture, textureId6);
 //
 //    mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
 //    shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
@@ -201,8 +214,9 @@ public class Museum_GLEventListener implements GLEventListener {
     float bodyHeight = 3f;
     float bodyWidth = 2f;
     float bodyDepth = 1f;
-    float bodyScale = 2f;
-    float headScale = 5f;
+    float bodyScale = 5f;
+    float headScale = 4f;
+    float eyeScale = 0.5f;
 //    float armLength = 3.5f;
 //    float armScale = 0.5f;
     float legLength = 3.5f;
@@ -215,16 +229,30 @@ public class Museum_GLEventListener implements GLEventListener {
 
 
     NameNode body = new NameNode("body");
-    Mat4 m = Mat4Transform.translate(0,0f,0);
+    Mat4 m = Mat4Transform.translate(0,bodyScale/2,0);
     m = Mat4.multiply(m, Mat4Transform.scale(bodyScale,bodyScale,bodyScale));
     TransformNode bodyTransform = new TransformNode("head transform", m);
-    ModelNode bodyShape = new ModelNode("Sphere(head)", sphere);
+    ModelNode bodyShape = new ModelNode("Sphere(body)", sphere);
 
     NameNode head = new NameNode("head");
-    m = Mat4Transform.translate(5,0f,0);
-    m = Mat4.multiply(m, Mat4Transform.scale(headScale,headScale,headScale));
+    m = Mat4Transform.translate(0,(bodyScale + headScale/2),0);
+    m = Mat4.multiply(m, Mat4Transform.scale(headScale,headScale ,headScale));
     TransformNode headTransform = new TransformNode("head transform", m);
-    ModelNode headShape = new ModelNode("Sphere(head)", sphere);
+    ModelNode headShape = new ModelNode("Sphere(head)", cube);
+
+    NameNode leftEye = new NameNode("leftEye");
+    m = new Mat4(1);
+    m = Mat4.multiply(m,Mat4Transform.translate(-(headScale/3),(bodyScale + (headScale/1.5f)),(headScale/2)));
+    m = Mat4.multiply(m, Mat4Transform.scale(eyeScale, eyeScale, eyeScale));
+    TransformNode leftEyeTransform = new TransformNode("head transform", m);
+    ModelNode leftEyeShape = new ModelNode("Sphere(eye)", eye);
+
+    NameNode rightEye = new NameNode("rightEye");
+    m = new Mat4(1);
+    m = Mat4.multiply(m,Mat4Transform.translate(-(headScale/3),(bodyScale + (headScale/1.5f)),(headScale/2)));
+    m = Mat4.multiply(m, Mat4Transform.scale(eyeScale, eyeScale, eyeScale));
+    TransformNode rightEyeTransform = new TransformNode("head transform", m);
+    ModelNode rightEyeShape = new ModelNode("Sphere(eye)", eye);
 
     robotRoot.addChild(robotMoveTranslate);
       robotMoveTranslate.addChild(robotTranslate);
@@ -233,7 +261,10 @@ public class Museum_GLEventListener implements GLEventListener {
             bodyTransform.addChild(bodyShape);
           body.addChild(head);
             head.addChild(headTransform);
-            headTransform.addChild(headShape);
+              headTransform.addChild(headShape);
+            head.addChild(leftEye);
+              leftEye.addChild(leftEyeTransform);
+                leftEyeTransform.addChild(leftEyeShape);
 
 //    NameNode body = new NameNode("body");
 //      Mat4 m = Mat4Transform.scale(bodyWidth,bodyHeight,bodyDepth);
