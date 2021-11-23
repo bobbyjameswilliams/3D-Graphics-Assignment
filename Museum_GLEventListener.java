@@ -117,9 +117,11 @@ public class Museum_GLEventListener implements GLEventListener {
   private Mat4 perspective;
   private Model floor, sphere, eye, cube, backwall, sidewall, windowView;
   private Light light;
+  // Roots
   private SGNode robotRoot;
+  private SGNode eggRoot;
   private float xPosition = -4f;
-  private TransformNode translateX, robotMoveTranslate, leftArmRotate, rightArmRotate;
+  private TransformNode translateX, eggMoveTranslate, robotMoveTranslate, leftArmRotate, rightArmRotate;
   
   private Model initialise_floor(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
@@ -249,30 +251,31 @@ public class Museum_GLEventListener implements GLEventListener {
     TransformNode leftArmScale = new TransformNode("leftarm scale", m);
     ModelNode leftArmShape = new ModelNode("Cube(left arm)", cube);
 
+    //Robot Scene Graph
     robotRoot.addChild(robotMoveTranslate);
-    robotMoveTranslate.addChild(robotTranslate);
-    robotTranslate.addChild(body);
-    body.addChild(bodyTransform);
-    bodyTransform.addChild(bodyShape);
-    body.addChild(head);
-    head.addChild(headTransform);
-    headTransform.addChild(headShape);
-    head.addChild(leftEye);
-    leftEye.addChild(leftEyeTransform);
-    leftEyeTransform.addChild(leftEyeShape);
-    head.addChild(rightEye);
-    rightEye.addChild(rightEyeTransform);
-    rightEyeTransform.addChild(rightEyeShape);
-    body.addChild(rightArm);
-    rightArm.addChild(rightArmTranslate);
-    rightArmTranslate.addChild(rightArmRotate);
-    rightArmRotate.addChild(rightArmScale);
-    rightArmScale.addChild(rightArmShape);
-    body.addChild(leftArm);
-    leftArm.addChild(leftArmTranslate);
-    leftArmTranslate.addChild(leftArmRotate);
-    leftArmRotate.addChild(leftArmScale);
-    leftArmScale.addChild(leftArmShape);
+      robotMoveTranslate.addChild(robotTranslate);
+        robotTranslate.addChild(body);
+          body.addChild(bodyTransform);
+            bodyTransform.addChild(bodyShape);
+              body.addChild(head);
+                head.addChild(headTransform);
+                  headTransform.addChild(headShape);
+                head.addChild(leftEye);
+                  leftEye.addChild(leftEyeTransform);
+                    leftEyeTransform.addChild(leftEyeShape);
+                head.addChild(rightEye);
+                  rightEye.addChild(rightEyeTransform);
+                    rightEyeTransform.addChild(rightEyeShape);
+              body.addChild(rightArm);
+                rightArm.addChild(rightArmTranslate);
+                  rightArmTranslate.addChild(rightArmRotate);
+                    rightArmRotate.addChild(rightArmScale);
+                      rightArmScale.addChild(rightArmShape);
+              body.addChild(leftArm);
+                leftArm.addChild(leftArmTranslate);
+                  leftArmTranslate.addChild(leftArmRotate);
+                    leftArmRotate.addChild(leftArmScale);
+                    leftArmScale.addChild(leftArmShape);
   }
 
   private void egg_scene(GL3 gl){
@@ -284,16 +287,29 @@ public class Museum_GLEventListener implements GLEventListener {
     TransformNode eggTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0));
 
     NameNode eggBase = new NameNode("egg base");
-    Mat4 m = Mat4Transform.translate(0,0,)
+    Mat4 m = Mat4Transform.translate(0,0,0);
+    m = Mat4.multiply(m, Mat4Transform.scale((eggScale * 2),(eggScale * 2),eggScale));
+    TransformNode eggBaseTransform =  new TransformNode("egg base transform", m);
+    ModelNode eggBaseShape = new ModelNode("Cube(egg base)", cube);
+
 
     NameNode egg = new NameNode("egg");
-    Mat4 m = Mat4Transform.translate(0,0,0);
-    m = Mat4.multiply(m, Mat4Transform.scale(3,5,3));
+    m = Mat4Transform.translate(0,eggScale/3,0);
+    m = Mat4.multiply(m, Mat4Transform.scale((eggScale/4),(eggScale/2),(eggScale/4)));
     TransformNode eggTransform = new TransformNode("egg transform", m);
     ModelNode eggShape = new ModelNode("Sphere(egg)", sphere);
 
+    eggRoot.addChild(eggMoveTranslate);
+      eggMoveTranslate.addChild(eggTranslate);
+        eggTranslate.addChild(eggBase);
+          eggBase.addChild(eggBaseTransform);
+            eggBaseTransform.addChild(eggBaseShape);
+              eggBaseShape.addChild(egg);
+                egg.addChild(eggTransform);
+                  eggTransform.addChild(eggShape);
 
   }
+
   private void initialise(GL3 gl) {
     createRandomNumbers();
     int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
@@ -304,7 +320,7 @@ public class Museum_GLEventListener implements GLEventListener {
     int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
     int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
     int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/ven0aaa2.jpg");
-    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg.jpg");
+    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg");
     
         
     light = new Light(gl);
@@ -329,11 +345,15 @@ public class Museum_GLEventListener implements GLEventListener {
     cube = initialise_cube(gl,camera,light,textureId1,textureId2);
     eye = initialise_eye(gl,camera,light,wallTexture,textureId6);
 //
-//    // robot
-//
+//  //Calling the scene functions
     robot_scene(gl);
+    egg_scene(gl);
+
+
     robotRoot.update();  // IMPORTANT - don't forget this
-    robotRoot.print(0, false);
+    eggRoot.update();
+    //eggRoot.print(0, false);
+    //eggRoot.print(0, false);
     //System.exit(0);
   }
  
@@ -348,6 +368,7 @@ public class Museum_GLEventListener implements GLEventListener {
     //if (animation) updateLeftArm();
     //if (animation) updateRightArm();
     robotRoot.draw(gl);
+    eggRoot.draw(gl);
   }
 
   private void updateLeftArm() {
