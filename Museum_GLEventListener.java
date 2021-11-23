@@ -279,7 +279,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
   private void egg_scene(GL3 gl){
-    float eggScale = 3f;
+    float eggScale = 5f;
 
     eggRoot = new NameNode("root");
     eggMoveTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0f));
@@ -287,15 +287,15 @@ public class Museum_GLEventListener implements GLEventListener {
     TransformNode eggTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0));
 
     NameNode eggBase = new NameNode("egg base");
-    Mat4 m = Mat4Transform.translate(0,0,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((eggScale * 2),(eggScale * 2),eggScale));
+    Mat4 m = Mat4Transform.translate(0,eggScale/4,0);
+    m = Mat4.multiply(m, Mat4Transform.scale((eggScale),eggScale/2,(eggScale)));
     TransformNode eggBaseTransform =  new TransformNode("egg base transform", m);
     ModelNode eggBaseShape = new ModelNode("Cube(egg base)", cube);
 
 
     NameNode egg = new NameNode("egg");
-    m = Mat4Transform.translate(0,eggScale/3,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((eggScale/4),(eggScale/2),(eggScale/4)));
+    m = Mat4Transform.translate(0,eggScale + eggScale/2,0);
+    m = Mat4.multiply(m, Mat4Transform.scale((eggScale),(eggScale * 2),(eggScale)));
     TransformNode eggTransform = new TransformNode("egg transform", m);
     ModelNode eggShape = new ModelNode("Sphere(egg)", sphere);
 
@@ -304,9 +304,9 @@ public class Museum_GLEventListener implements GLEventListener {
         eggTranslate.addChild(eggBase);
           eggBase.addChild(eggBaseTransform);
             eggBaseTransform.addChild(eggBaseShape);
-              eggBaseShape.addChild(egg);
-                egg.addChild(eggTransform);
-                  eggTransform.addChild(eggShape);
+          eggBase.addChild(egg);
+            egg.addChild(eggTransform);
+              eggTransform.addChild(eggShape);
 
   }
 
