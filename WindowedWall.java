@@ -24,14 +24,18 @@ public final class WindowedWall {
   };
   
   public static final int[] indices = {         // Note that we start from 0!
-    5,4,0,
-    0,1,5,
-    4,8,7,
-    7,8,11,
-    2,7,6,
-    2,3,7,
-    5,6,10,
-    9,5,10
+
+    5,4,0, //left square right triangle
+    0,1,5, //left square left triangle
+
+    4,8,7, //top square top triangle
+    7,8,11, //top square bottom triangle
+
+    2,7,6, //right square left triangle
+    2,3,7, //right square right triangle
+
+    5,6,10, //bottom swuare bottom triangle
+    9,5,10 //bottom square bottom triangle
   };
 
 }
