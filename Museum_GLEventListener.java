@@ -120,8 +120,15 @@ public class Museum_GLEventListener implements GLEventListener {
   // Roots
   private SGNode robotRoot;
   private SGNode eggRoot;
+  private SGNode phoneRoot;
+
   private float xPosition = -4f;
-  private TransformNode translateX, eggMoveTranslate, robotMoveTranslate, leftArmRotate, rightArmRotate;
+  private TransformNode translateX;
+  private TransformNode robotMoveTranslate;
+  private TransformNode eggMoveTranslate;
+  private TransformNode phoneMoveTranslate;
+  private TransformNode leftArmRotate;
+  private TransformNode rightArmRotate;
   
   private Model initialise_floor(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
@@ -282,7 +289,7 @@ public class Museum_GLEventListener implements GLEventListener {
     float eggScale = 5f;
 
     eggRoot = new NameNode("root");
-    eggMoveTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0f));
+    eggMoveTranslate = new TransformNode("egg transform", Mat4Transform.translate(0, 0, 0f));
 //
     TransformNode eggTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0));
 
@@ -308,6 +315,14 @@ public class Museum_GLEventListener implements GLEventListener {
             egg.addChild(eggTransform);
               eggTransform.addChild(eggShape);
 
+  }
+
+  private void mobile_phone_scene(GL3 gl){
+    phoneRoot = new NameNode("root");
+    phoneMoveTranslate = new TransformNode("phone transform", Mat4Transform.translate(0, 0, 0f))
+
+    TransformNode phoneBaseTransform = new TransformNode("")
+    // look more into why there are two translate objects!!!!
   }
 
   private void initialise(GL3 gl) {
