@@ -118,7 +118,7 @@ public class Museum_GLEventListener implements GLEventListener {
   private Model floor, sphere, eye, cube, backwall, sidewall, windowView;
   private Light light;
   private SGNode robotRoot;
-  private float xPosition = 0;
+  private float xPosition = -4f;
   private TransformNode translateX, robotMoveTranslate, leftArmRotate, rightArmRotate;
   
   private Model initialise_floor(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
@@ -198,7 +198,7 @@ public class Museum_GLEventListener implements GLEventListener {
 //    float legScale = 0.67f;
 //
     robotRoot = new NameNode("root");
-    robotMoveTranslate = new TransformNode("robot transform",Mat4Transform.translate(xPosition,0,0));
+    robotMoveTranslate = new TransformNode("robot transform",Mat4Transform.translate(xPosition,0,-17f));
 //
     TransformNode robotTranslate = new TransformNode("robot transform",Mat4Transform.translate(0,0,0));
 
@@ -275,6 +275,25 @@ public class Museum_GLEventListener implements GLEventListener {
     leftArmScale.addChild(leftArmShape);
   }
 
+  private void egg_scene(GL3 gl){
+    float eggScale = 3f;
+
+    eggRoot = new NameNode("root");
+    eggMoveTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0f));
+//
+    TransformNode eggTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0));
+
+    NameNode eggBase = new NameNode("egg base");
+    Mat4 m = Mat4Transform.translate(0,0,)
+
+    NameNode egg = new NameNode("egg");
+    Mat4 m = Mat4Transform.translate(0,0,0);
+    m = Mat4.multiply(m, Mat4Transform.scale(3,5,3));
+    TransformNode eggTransform = new TransformNode("egg transform", m);
+    ModelNode eggShape = new ModelNode("Sphere(egg)", sphere);
+
+
+  }
   private void initialise(GL3 gl) {
     createRandomNumbers();
     int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
