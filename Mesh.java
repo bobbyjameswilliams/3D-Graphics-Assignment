@@ -57,7 +57,7 @@ public class Mesh {
     offset = (numXYZFloats+numNormalFloats)*Float.BYTES;
     gl.glVertexAttribPointer(2, numTexFloats, GL.GL_FLOAT, false, stride*Float.BYTES, offset);
     gl.glEnableVertexAttribArray(2);
-    
+
     gl.glGenBuffers(1, elementBufferId, 0);
     IntBuffer ib = Buffers.newDirectIntBuffer(indices);
     gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, elementBufferId[0]);
