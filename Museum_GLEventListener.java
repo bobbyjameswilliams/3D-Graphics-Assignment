@@ -115,13 +115,21 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Camera camera;
   private Mat4 perspective;
-  private Model floor, sphere, eye, cube, backwall, sidewall, windowView;
+  private Model floor, sphere, eye, cube, phoneBaseCube, mobilePhone, backwall, sidewall, windowView;
   private Light light;
   // Roots
+
   private SGNode robotRoot;
   private SGNode eggRoot;
+  private SGNode phoneRoot;
+
   private float xPosition = -4f;
-  private TransformNode translateX, eggMoveTranslate, robotMoveTranslate, leftArmRotate, rightArmRotate;
+  private TransformNode translateX;
+  private TransformNode robotMoveTranslate;
+  private TransformNode eggMoveTranslate;
+  private TransformNode phoneMoveTranslate2;
+  private TransformNode leftArmRotate;
+  private TransformNode rightArmRotate;
   
   private Model initialise_floor(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
@@ -179,6 +187,22 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
+  private Model initialise_phone_base_cube(GL3 gl, Camera camera, Light light, int[] texture1, int[]texture2){
+    Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
+    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
+    Mat4 modelMatrix = new Mat4(1);
+    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+  }
+
+  private Model initialise_phone(GL3 gl, Camera camera, Light light, int[] texture1, int[]texture2){
+    Mesh mesh = new Mesh(gl, PhoneCube.vertices.clone(), PhoneCube.indices.clone());
+    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), 32.0f);
+    Mat4 modelMatrix = new Mat4(1);
+    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+  }
+
   private Model initialise_eye(GL3 gl, Camera camera, Light light, int[] texture1, int[] texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
     Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
@@ -186,6 +210,8 @@ public class Museum_GLEventListener implements GLEventListener {
     Mat4 modelMatrix = new Mat4(1);
     return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
   }
+
+  // SCENES
 
   private void robot_scene(GL3 gl){
     float bodyHeight = 3f;
@@ -200,9 +226,11 @@ public class Museum_GLEventListener implements GLEventListener {
 //    float legScale = 0.67f;
 //
     robotRoot = new NameNode("root");
-    robotMoveTranslate = new TransformNode("robot transform",Mat4Transform.translate(xPosition,0,-17f));
+    robotMoveTranslate = new
+            TransformNode("robot transform",Mat4Transform.translate(xPosition,0,0));
 //
-    TransformNode robotTranslate = new TransformNode("robot transform",Mat4Transform.translate(0,0,0));
+    TransformNode robotTranslate = new
+            TransformNode("robot transform",Mat4Transform.translate(0,0,-17f));
 
 
     NameNode body = new NameNode("body");
@@ -282,8 +310,7 @@ public class Museum_GLEventListener implements GLEventListener {
     float eggScale = 5f;
 
     eggRoot = new NameNode("root");
-    eggMoveTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0f));
-//
+    eggMoveTranslate = new TransformNode("egg transform", Mat4Transform.translate(0, 0, 0f));
     TransformNode eggTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0));
 
     NameNode eggBase = new NameNode("egg base");
@@ -310,17 +337,50 @@ public class Museum_GLEventListener implements GLEventListener {
 
   }
 
+  private void mobile_phone_scene(GL3 gl) {
+    float phoneScale = 5f;
+
+    phoneRoot = new NameNode("root");
+    phoneMoveTranslate2 = new TransformNode("phone transform", Mat4Transform.translate(15, 0, -15f));
+    TransformNode phoneTranslate = new TransformNode("phone transform",Mat4Transform.translate(0,0,0));
+
+    NameNode phoneBase = new NameNode("phone base");
+    Mat4 m = Mat4Transform.translate(0,phoneScale/4,0);
+    m = Mat4.multiply(m, Mat4Transform.scale((phoneScale),phoneScale/2,(phoneScale)));
+    TransformNode eggBaseTransform2 =  new TransformNode("phone base transform", m);
+    ModelNode phoneBaseShape = new ModelNode("Cube(phone base)", phoneBaseCube);
+
+
+    NameNode phone = new NameNode("phone");
+    m = Mat4Transform.translate(0,phoneScale + phoneScale/2,0);
+    m = Mat4.multiply(m, Mat4Transform.scale((phoneScale),(phoneScale * 2),(phoneScale / 4)));
+    TransformNode phoneTransform = new TransformNode("phone transform", m);
+    ModelNode phoneShape = new ModelNode("Cube(phone)", mobilePhone);
+
+    phoneRoot.addChild(phoneMoveTranslate2);
+    phoneMoveTranslate2.addChild(phoneTranslate);
+    phoneTranslate.addChild(phoneBase);
+    phoneBase.addChild(eggBaseTransform2);
+    eggBaseTransform2.addChild(phoneBaseShape);
+          phoneBase.addChild(phone);
+            phone.addChild(phoneTransform);
+              phoneTransform.addChild(phoneShape);
+  }
+
   private void initialise(GL3 gl) {
     createRandomNumbers();
     int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
     int[] wallTexture = TextureLibrary.loadTexture(gl, "textures/wallTexture.jpg");
     int[] windowViewTexture = TextureLibrary.loadTexture(gl, "textures/windowView.jpg");
+    int[] phoneTexure = TextureLibrary.loadTexture(gl, "textures/cube.jpg");
+    int[] phoneSpecular = TextureLibrary.loadTexture(gl, "textures/cube_specular.jpg");
     int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
     int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
     int[] textureId3 = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
     int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
     int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/ven0aaa2.jpg");
     int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg");
+
     
         
     light = new Light(gl);
@@ -344,16 +404,25 @@ public class Museum_GLEventListener implements GLEventListener {
     sphere = initialise_sphere(gl,camera,light,textureId1,textureId2);
     cube = initialise_cube(gl,camera,light,textureId1,textureId2);
     eye = initialise_eye(gl,camera,light,wallTexture,textureId6);
+
+    phoneBaseCube = initialise_phone_base_cube(gl,camera,light,textureId5,textureId2);
+    mobilePhone = initialise_phone(gl,camera,light,phoneTexure,phoneSpecular);
 //
 //  //Calling the scene functions
     robot_scene(gl);
+    mobile_phone_scene(gl);
     egg_scene(gl);
 
 
+
     robotRoot.update();  // IMPORTANT - don't forget this
+    phoneRoot.update();
     eggRoot.update();
+
+
     //eggRoot.print(0, false);
     //eggRoot.print(0, false);
+    phoneRoot.print(0,false);
     //System.exit(0);
   }
  
@@ -368,6 +437,7 @@ public class Museum_GLEventListener implements GLEventListener {
     //if (animation) updateLeftArm();
     //if (animation) updateRightArm();
     robotRoot.draw(gl);
+    phoneRoot.draw(gl);
     eggRoot.draw(gl);
   }
 
