@@ -122,14 +122,17 @@ public class Museum_GLEventListener implements GLEventListener {
   private SGNode robotRoot;
   private SGNode eggRoot;
   private SGNode phoneRoot;
+  private SGNode lampRoot;
 
   private float xPosition = -4f;
   private TransformNode translateX;
   private TransformNode robotMoveTranslate;
   private TransformNode eggMoveTranslate;
-  private TransformNode phoneMoveTranslate2;
+  private TransformNode phoneMoveTranslate;
+  private TransformNode lampMoveTranslate;
   private TransformNode leftArmRotate;
   private TransformNode rightArmRotate;
+  private TransformNode lampRotate;
   
   private Model initialise_floor(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
@@ -341,13 +344,13 @@ public class Museum_GLEventListener implements GLEventListener {
     float phoneScale = 5f;
 
     phoneRoot = new NameNode("root");
-    phoneMoveTranslate2 = new TransformNode("phone transform", Mat4Transform.translate(15, 0, -15f));
+    phoneMoveTranslate = new TransformNode("phone transform", Mat4Transform.translate(15, 0, -15f));
     TransformNode phoneTranslate = new TransformNode("phone transform",Mat4Transform.translate(0,0,0));
 
     NameNode phoneBase = new NameNode("phone base");
     Mat4 m = Mat4Transform.translate(0,phoneScale/4,0);
     m = Mat4.multiply(m, Mat4Transform.scale((phoneScale),phoneScale/2,(phoneScale)));
-    TransformNode eggBaseTransform2 =  new TransformNode("phone base transform", m);
+    TransformNode phoneBaseTransform =  new TransformNode("phone base transform", m);
     ModelNode phoneBaseShape = new ModelNode("Cube(phone base)", phoneBaseCube);
 
 
@@ -357,14 +360,86 @@ public class Museum_GLEventListener implements GLEventListener {
     TransformNode phoneTransform = new TransformNode("phone transform", m);
     ModelNode phoneShape = new ModelNode("Cube(phone)", mobilePhone);
 
-    phoneRoot.addChild(phoneMoveTranslate2);
-    phoneMoveTranslate2.addChild(phoneTranslate);
+    phoneRoot.addChild(phoneMoveTranslate);
+    phoneMoveTranslate.addChild(phoneTranslate);
     phoneTranslate.addChild(phoneBase);
-    phoneBase.addChild(eggBaseTransform2);
-    eggBaseTransform2.addChild(phoneBaseShape);
+    phoneBase.addChild(phoneBaseTransform);
+    phoneBaseTransform.addChild(phoneBaseShape);
           phoneBase.addChild(phone);
             phone.addChild(phoneTransform);
               phoneTransform.addChild(phoneShape);
+  }
+
+  private void lamp_scene(GL3 gl) {
+    float lampScale = 5f;
+
+    lampRoot = new NameNode("root");
+    lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(15, 0, 15f));
+    TransformNode lampTranslate = new TransformNode("lamp transform",Mat4Transform.translate(0,0,0));
+
+    NameNode lampBase = new NameNode("phone base");
+    Mat4 m = Mat4Transform.translate(0,lampScale/4,0);
+    m = Mat4.multiply(m, Mat4Transform.scale((lampScale),lampScale/4,(lampScale)));
+    TransformNode lampBaseTransform =  new TransformNode("phone base transform", m);
+    ModelNode lampBaseShape = new ModelNode("Cube(phone base)", cube);
+
+
+    NameNode lamp1 = new NameNode("lamp1");
+    m = Mat4Transform.translate(
+            0,
+            lampScale + lampScale/4,
+            0);
+    m = Mat4.multiply(m, Mat4Transform.scale(
+            (lampScale / 4),
+            (lampScale * 2),
+            (lampScale / 4)));
+    TransformNode lamp1Transform = new TransformNode("lamp1 transform", m);
+    ModelNode lamp1Shape = new ModelNode("Cube(lamp1)", cube);
+
+    NameNode lamp2 = new NameNode("lamp2");
+    m = Mat4Transform.translate(
+            (-lampScale) + lampScale/8 ,
+            (lampScale * 2) + lampScale / 4 + lampScale / 8,
+            0);
+    m = Mat4.multiply(m, Mat4Transform.scale(
+            (lampScale * 2),
+            (lampScale / 4),
+            (lampScale / 4)));
+    TransformNode lamp2Transform = new TransformNode("lamp2 transform", m);
+    ModelNode lamp2Shape = new ModelNode("Cube(lamp2)", cube);
+
+    NameNode lampHead = new NameNode("lamp head");
+    TransformNode lampHeadTranslate = new TransformNode("lamp head translate",
+            Mat4Transform.translate(
+                    -(lampScale * 2) + lampScale / 4,
+                    (lampScale * 2) + lampScale / 8,
+                    0));
+    lampRotate = new TransformNode("lamp head rotate",Mat4Transform.rotateAroundZ(0));
+    m = new Mat4(1);
+    m = Mat4.multiply(m, Mat4Transform.scale(
+            (lampScale / 4),
+            (lampScale / 4),
+            (lampScale / 4)));
+    m = Mat4.multiply(m, Mat4Transform.translate(0,0,0));
+    TransformNode lampHeadScale = new TransformNode("lamp head scale", m);
+    ModelNode lampHeadShape = new ModelNode("Cube(lamp head)", cube);
+
+    lampRoot.addChild(lampMoveTranslate);
+      lampMoveTranslate.addChild(lampTranslate);
+        lampTranslate.addChild(lampBase);
+          lampBase.addChild(lampBaseTransform);
+          lampBaseTransform.addChild(lampBaseShape);
+           lampBase.addChild(lamp1);
+            lamp1.addChild(lamp1Transform);
+              lamp1Transform.addChild(lamp1Shape);
+            lamp1.addChild(lamp2);
+              lamp2.addChild(lamp2Transform);
+                lamp2Transform.addChild(lamp2Shape);
+              lamp2.addChild(lampHead);
+                lampHead.addChild(lampHeadTranslate);
+                  lampHeadTranslate.addChild(lampRotate);
+                    lampRotate.addChild(lampHeadScale);
+                      lampHeadScale.addChild(lampHeadShape);
   }
 
   private void initialise(GL3 gl) {
@@ -412,17 +487,17 @@ public class Museum_GLEventListener implements GLEventListener {
     robot_scene(gl);
     mobile_phone_scene(gl);
     egg_scene(gl);
-
-
+    lamp_scene(gl);
 
     robotRoot.update();  // IMPORTANT - don't forget this
     phoneRoot.update();
     eggRoot.update();
+    lampRoot.update();
 
 
     //eggRoot.print(0, false);
     //eggRoot.print(0, false);
-    phoneRoot.print(0,false);
+    lampRoot.print(0,false);
     //System.exit(0);
   }
  
@@ -439,6 +514,9 @@ public class Museum_GLEventListener implements GLEventListener {
     robotRoot.draw(gl);
     phoneRoot.draw(gl);
     eggRoot.draw(gl);
+    lampRoot.draw(gl);
+
+    lampSwing();
   }
 
   private void updateLeftArm() {
@@ -446,6 +524,13 @@ public class Museum_GLEventListener implements GLEventListener {
     float rotateAngle = 180f+90f*(float)Math.sin(elapsedTime);
     leftArmRotate.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
     leftArmRotate.update();
+  }
+
+  private void lampSwing() {
+    double elapsedTime = getSeconds()-startTime;
+    float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/2);
+    lampRotate.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
+    lampRotate.update();
   }
 
   private void updateRightArm() {
