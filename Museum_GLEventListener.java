@@ -1,6 +1,10 @@
+import com.jogamp.newt.Window;
 import gmaths.*;
 
 import com.jogamp.opengl.*;
+
+import java.util.Collections;
+import java.util.List;
 
 public class Museum_GLEventListener implements GLEventListener {
   
@@ -116,7 +120,10 @@ public class Museum_GLEventListener implements GLEventListener {
   private Camera camera;
   private Mat4 perspective;
   private Model floor, sphere, eye, cube, phoneBaseCube, mobilePhone, backwall, sidewall, windowView;
+  private List<Light> lights;
   private Light light;
+  private Light mainLight;
+
   // Roots
 
   private SGNode robotRoot;
@@ -134,84 +141,84 @@ public class Museum_GLEventListener implements GLEventListener {
   private TransformNode rightFeelerRotate;
   private TransformNode lampRotate;
   
-  private Model initialise_floor(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
+  private Model initialise_floor(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     Mat4 modelMatrix = Mat4Transform.scale(roomSize,1f,roomSize);
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
 
-  private Model initialise_backwall(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
+  private Model initialise_backwall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, DoorWall.vertices.clone(), DoorWall.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     Mat4 modelMatrix =  Mat4Transform.translate(0,(roomSize/2),-(roomSize/2));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
 
-  private Model initialise_sidewall(GL3 gl, Camera camera, Light light, int[] texture, float roomSize){
+  private Model initialise_sidewall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, WindowedWall.vertices.clone(), WindowedWall.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     Mat4 modelMatrix =  Mat4Transform.translate(-(roomSize/2),(roomSize/2),0);
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundZ(-90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize));
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
 
-  private Model initialise_skybox(GL3 gl, Camera camera, Light light, int[] texture, float roomSize, float relativeViewOffset){
+  private Model initialise_skybox(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize, float relativeViewOffset){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     Material material = new Material(new Vec3(1f, 1f, 1f), new Vec3(1f, 1f, 1f), new Vec3(0.0f, 0.0f, 0.0f), 1.0f);
     Mat4 modelMatrix =  Mat4Transform.translate(-relativeViewOffset,(roomSize/2),0);
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundZ(-90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize * 2 ,1f,roomSize * 2));
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
 
-  private Model initialise_sphere(GL3 gl, Camera camera, Light light, int[] texture1, int[] texture2){
+  private Model initialise_sphere(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[] texture2){
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
-  private Model initialise_cube(GL3 gl, Camera camera, Light light, int[] texture1, int[]texture2){
+  private Model initialise_cube(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
-  private Model initialise_phone_base_cube(GL3 gl, Camera camera, Light light, int[] texture1, int[]texture2){
+  private Model initialise_phone_base_cube(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
-  private Model initialise_phone(GL3 gl, Camera camera, Light light, int[] texture1, int[]texture2){
+  private Model initialise_phone(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, PhoneCube.vertices.clone(), PhoneCube.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
-  private Model initialise_eye(GL3 gl, Camera camera, Light light, int[] texture1, int[] texture2){
+  private Model initialise_eye(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[] texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
-    return new Model(gl, camera, light, shader, material, modelMatrix, mesh, texture1, texture2);
+    return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
   // SCENES
@@ -490,28 +497,37 @@ public class Museum_GLEventListener implements GLEventListener {
         
     light = new Light(gl);
     light.setCamera(camera);
+    mainLight = new Light(gl);
+    mainLight.setCamera(camera);
+    mainLight.setPosition(4,30,4);
+
+    List<Light> lights = new java.util.ArrayList<>(Collections.emptyList());
+    lights.add(light);
+    lights.add(mainLight);
+    //lightList.add(spotLight);
+
     float roomSize = 40;
     float viewOffset = 12;
     float relativeViewOffset = (roomSize/2) + viewOffset;
 
     //floor
-    floor = initialise_floor(gl, camera, light, woodFloorTexture, roomSize);
+    floor = initialise_floor(gl, camera, lights, woodFloorTexture, roomSize);
     //back wall
-    backwall = initialise_backwall(gl, camera, light, wallTexture, roomSize);
+    backwall = initialise_backwall(gl, camera, lights, wallTexture, roomSize);
     //windowed wall
-    sidewall = initialise_sidewall(gl, camera, light, wallTexture, roomSize);
+    sidewall = initialise_sidewall(gl, camera, lights, wallTexture, roomSize);
     //sky box
-    windowView = initialise_skybox(gl, camera, light, windowViewTexture, roomSize, relativeViewOffset) ;
+    windowView = initialise_skybox(gl, camera, lights, windowViewTexture, roomSize, relativeViewOffset) ;
 
 
     //#################### ROBOT!!! ###############################
     //robot body
-    sphere = initialise_sphere(gl,camera,light,textureId1,textureId2);
-    cube = initialise_cube(gl,camera,light,textureId1,textureId2);
-    eye = initialise_eye(gl,camera,light,wallTexture,textureId6);
+    sphere = initialise_sphere(gl,camera,lights,textureId1,textureId2);
+    cube = initialise_cube(gl,camera,lights,textureId1,textureId2);
+    eye = initialise_eye(gl,camera,lights,wallTexture,textureId6);
 
-    phoneBaseCube = initialise_phone_base_cube(gl,camera,light,textureId5,textureId2);
-    mobilePhone = initialise_phone(gl,camera,light,phoneTexure,phoneSpecular);
+    phoneBaseCube = initialise_phone_base_cube(gl,camera,lights,textureId5,textureId2);
+    mobilePhone = initialise_phone(gl,camera,lights,phoneTexure,phoneSpecular);
 //
 //  //Calling the scene functions
     robot_scene(gl);
@@ -535,6 +551,7 @@ public class Museum_GLEventListener implements GLEventListener {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
+    mainLight.render(gl);
     floor.render(gl);
     backwall.render(gl);
     sidewall.render(gl);
