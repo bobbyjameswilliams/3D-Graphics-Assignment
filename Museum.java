@@ -16,7 +16,7 @@ public class Museum extends JFrame implements ActionListener {
   private Camera camera;
 
   public static void main(String[] args) {
-    Museum b1 = new Museum("M04");
+    Museum b1 = new Museum("Museum - Bobby Williams acb18bw");
     b1.getContentPane().setPreferredSize(dimension);
     b1.pack();
     b1.setVisible(true);
