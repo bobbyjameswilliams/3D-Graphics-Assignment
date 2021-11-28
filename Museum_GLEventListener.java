@@ -123,6 +123,7 @@ public class Museum_GLEventListener implements GLEventListener {
   private List<Light> lights;
   private Light light;
   private Light mainLight;
+  private Light spotLight;
 
   // Roots
 
@@ -500,11 +501,13 @@ public class Museum_GLEventListener implements GLEventListener {
     mainLight = new Light(gl);
     mainLight.setCamera(camera);
     mainLight.setPosition(4,30,4);
+    spotLight = new Light(gl);
+    spotLight.setCamera(camera);
 
     List<Light> lights = new java.util.ArrayList<>(Collections.emptyList());
     lights.add(light);
     lights.add(mainLight);
-    //lightList.add(spotLight);
+    lights.add(spotLight);
 
     float roomSize = 40;
     float viewOffset = 12;
