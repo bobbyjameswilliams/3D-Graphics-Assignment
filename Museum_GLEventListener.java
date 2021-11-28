@@ -145,7 +145,7 @@ public class Museum_GLEventListener implements GLEventListener {
     light.setCamera(camera);
     light2 = new Light(gl);
     light2.setCamera(camera);
-    light2.setPosition(4,10,6);
+    light2.setPosition(4,30,6);
 
     List<Light> lightList = new java.util.ArrayList<>(Collections.emptyList());
     lightList.add(light);

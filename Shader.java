@@ -69,6 +69,7 @@ public class Shader {
     int location = gl.glGetUniformLocation(ID, name);
     gl.glUniform3f(location, v.x, v.y, v.z);
   }
+
   
   private void display() {
     System.out.println("***Vertex shader***");

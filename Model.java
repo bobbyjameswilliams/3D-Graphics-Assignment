@@ -1,6 +1,4 @@
 import gmaths.*;
-import java.nio.*;
-import com.jogamp.common.nio.*;
 import com.jogamp.opengl.*;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class Model {
   private Shader shader;
   private Mat4 modelMatrix;
   private Camera camera;
-  private List<Light> light;
+  private List<Light> lights;
   
   public Model(GL3 gl, Camera camera, List<Light> light, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh, int[] textureId1, int[] textureId2) {
     this.mesh = mesh;
@@ -21,7 +19,7 @@ public class Model {
     this.modelMatrix = modelMatrix;
     this.shader = shader;
     this.camera = camera;
-    this.light = light;
+    this.lights = light;
     this.textureId1 = textureId1;
     this.textureId2 = textureId2;
   }
@@ -42,8 +40,8 @@ public class Model {
     this.camera = camera;
   }
   
-  public void setLight(Light light) {
-    this.light.add(light);
+  public void setLights(Light lights) {
+    this.lights.add(lights);
   }
 
   public void render(GL3 gl, Mat4 modelMatrix) {
@@ -54,10 +52,17 @@ public class Model {
     
     shader.setVec3(gl, "viewPos", camera.getPosition());
 
-    shader.setVec3(gl, "light.position", light.get(0).getPosition());
-    shader.setVec3(gl, "light.ambient", light.get(0).getMaterial().getAmbient());
-    shader.setVec3(gl, "light.diffuse", light.get(0).getMaterial().getDiffuse());
-    shader.setVec3(gl, "light.specular", light.get(0).getMaterial().getSpecular());
+
+    shader.setVec3(gl, "light1.position", lights.get(0).getPosition());
+    shader.setVec3(gl, "light1.ambient", lights.get(0).getMaterial().getAmbient());
+    shader.setVec3(gl, "light1.diffuse", lights.get(0).getMaterial().getDiffuse());
+    shader.setVec3(gl, "light1.specular", lights.get(0).getMaterial().getSpecular());
+
+    shader.setVec3(gl, "light2.position", lights.get(1).getPosition());
+    shader.setVec3(gl, "light2.ambient", lights.get(1).getMaterial().getAmbient());
+    shader.setVec3(gl, "light2.diffuse", lights.get(1).getMaterial().getDiffuse());
+    shader.setVec3(gl, "light2.specular", lights.get(1).getMaterial().getSpecular());
+
 
     shader.setVec3(gl, "material.ambient", material.getAmbient());
     shader.setVec3(gl, "material.diffuse", material.getDiffuse());
