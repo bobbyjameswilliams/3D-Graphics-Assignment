@@ -50,7 +50,7 @@ void main() {
 
   //light 2
 
-  ambient = light2.ambient * vec3(texture(first_texture, aTexCoord));
+  ambient = ((light1.ambient + light2.ambient)/2) * vec3(texture(first_texture, aTexCoord));
   // diffuse
   norm = normalize(aNormal);
   lightDir = normalize(light2.position - aPos);

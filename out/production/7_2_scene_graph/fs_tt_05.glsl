@@ -16,8 +16,16 @@ struct Light {
   vec3 specular;
 };
 
+struct SpotLight {
+  vec3 position;
+  vec3 ambient;
+  vec3 diffuse;
+  vec3 specular;
+};
+
 uniform Light light1;
 uniform Light light2;
+uniform SpotLight spotLight;
 
 struct Material {
   vec3 ambient;
@@ -33,7 +41,7 @@ void main() {
   vec3 totalDiffuse = vec3(0.0);
   vec3 totalSpecular = vec3(0.0);
   // ambient
-  vec3 ambient = light1.ambient * material.ambient * texture(first_texture, aTexCoord).rgb;
+  vec3 ambient = ((light1.ambient + light2.ambient)/2) * material.ambient * texture(first_texture, aTexCoord).rgb;
 
 
   //light 1
@@ -49,17 +57,19 @@ void main() {
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
   totalSpecular = totalSpecular + light1.specular * (spec * material.specular);
 
-  //light 2 #############################
-  norm = normalize(aNormal);
-  lightDir = normalize(light2.position - aPos);
-  diff = max(dot(norm, lightDir), 0.0);
-  totalDiffuse = totalDiffuse + light2.diffuse * (diff * material.diffuse) * texture(first_texture, aTexCoord).rgb;
 
-  // specular
-  viewDir = normalize(viewPos - aPos);
-  reflectDir = reflect(-lightDir, norm);
-  spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-  totalSpecular = totalSpecular + light2.specular * (spec * material.specular);
+
+//  //light 2 #############################
+//  norm = normalize(aNormal);
+//  lightDir = normalize(light2.position - aPos);
+//  diff = max(dot(norm, lightDir), 0.0);
+//  totalDiffuse = totalDiffuse + light2.diffuse * (diff * material.diffuse) * texture(first_texture, aTexCoord).rgb;
+//
+//  // specular
+//  viewDir = normalize(viewPos - aPos);
+//  reflectDir = reflect(-lightDir, norm);
+//  spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+//  totalSpecular = totalSpecular + light2.specular * (spec * material.specular);
 
 
   vec3 result = ambient + totalDiffuse + totalSpecular;

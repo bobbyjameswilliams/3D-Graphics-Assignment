@@ -123,6 +123,8 @@ public class Museum_GLEventListener implements GLEventListener {
   private Model floor, sphere, cube, cube2, backwall, sidewall, windowView;
   private Light light;
   private Light light2;
+  private Light spotLight;
+
   private SGNode robotRoot;
   
   private float xPosition = 0;
@@ -145,11 +147,15 @@ public class Museum_GLEventListener implements GLEventListener {
     light.setCamera(camera);
     light2 = new Light(gl);
     light2.setCamera(camera);
-    light2.setPosition(4,30,6);
+    light2.setPosition(7,30,6);
+    spotLight = new Light(gl);
+    spotLight.setCamera(camera);
+    spotLight.setPosition(-7,2,-6);
 
     List<Light> lightList = new java.util.ArrayList<>(Collections.emptyList());
     lightList.add(light);
     lightList.add(light2);
+    lightList.add(spotLight);
 
     float roomSize = 40;
     float viewOffset = 12;
@@ -311,6 +317,8 @@ public class Museum_GLEventListener implements GLEventListener {
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
     light2.render(gl);
+    spotLight.render(gl);
+
     backwall.render(gl);
     floor.render(gl);
     sidewall.render(gl);
