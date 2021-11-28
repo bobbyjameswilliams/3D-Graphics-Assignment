@@ -145,7 +145,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
     //floor
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     Mat4 modelMatrix = Mat4Transform.scale(roomSize,1f,roomSize);
     //modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundY(90));
@@ -153,7 +153,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
     //back wall
     mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     modelMatrix =  Mat4Transform.translate(0,(roomSize/2),-(roomSize/2));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
@@ -162,7 +162,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
     //windowed wall
     mesh = new Mesh(gl, WindowedWall.vertices.clone(), WindowedWall.indices.clone());
-    shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     modelMatrix =  Mat4Transform.translate(-(roomSize/2),(roomSize/2),0);
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
@@ -172,7 +172,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
     //sky box
     mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    shader = new Shader(gl, "vs_tt_05.txt", "fs_tt_05.txt");
+    shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
     material = new Material(new Vec3(1f, 1f, 1f), new Vec3(1f, 1f, 1f), new Vec3(0.0f, 0.0f, 0.0f), 1.0f);
     modelMatrix =  Mat4Transform.translate(-relativeViewOffset,(roomSize/2),0);
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
@@ -182,13 +182,13 @@ public class Museum_GLEventListener implements GLEventListener {
 
 
     mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-    shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
     material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     modelMatrix = Mat4.multiply(Mat4Transform.scale(4,4,4), Mat4Transform.translate(0,0.5f,0));
     sphere = new Model(gl, camera, light, shader, material, modelMatrix, mesh, textureId1, textureId2);
     
     mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-    shader = new Shader(gl, "vs_cube_04.txt", "fs_cube_04.txt");
+    shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
     material = new Material(new Vec3(1.0f, 0.5f, 0.31f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     modelMatrix = Mat4.multiply(Mat4Transform.scale(4,4,4), Mat4Transform.translate(0,0.5f,0));
     cube = new Model(gl, camera, light, shader, material, modelMatrix, mesh, textureId3, textureId4);

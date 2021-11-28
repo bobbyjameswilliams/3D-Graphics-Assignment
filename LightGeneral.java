@@ -1,17 +1,22 @@
-import gmaths.*;
-import java.nio.*;
-import com.jogamp.common.nio.*;
-import com.jogamp.opengl.*;
-  
-public class Light {
-  
+import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL3;
+import gmaths.Mat4;
+import gmaths.Mat4Transform;
+import gmaths.Vec3;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+public class LightGeneral {
+
   private Material material;
   private Vec3 position;
   private Mat4 model;
   private Shader shader;
   private Camera camera;
-    
-  public Light(GL3 gl) {
+
+  public LightGeneral(GL3 gl) {
     material = new Material();
     material.setAmbient(0.5f, 0.5f, 0.5f);
     material.setDiffuse(0.8f, 0.8f, 0.8f);
