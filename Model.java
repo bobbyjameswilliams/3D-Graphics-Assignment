@@ -45,6 +45,7 @@ public class Model {
   }
 
   public void render(GL3 gl, Mat4 modelMatrix) {
+    System.out.print("lol");
     Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), modelMatrix));
     shader.use(gl);
     shader.setFloatArray(gl, "model", modelMatrix.toFloatArrayForGLSL());
@@ -52,7 +53,7 @@ public class Model {
 
     shader.setVec3(gl, "viewPos", camera.getPosition());
 
-
+    startTime 
     shader.setVec3(gl, "light1.position", lights.get(0).getPosition());
     shader.setVec3(gl, "light1.ambient", lights.get(0).getMaterial().getAmbient());
     shader.setVec3(gl, "light1.diffuse", lights.get(0).getMaterial().getDiffuse());
@@ -63,11 +64,11 @@ public class Model {
     shader.setVec3(gl, "light2.diffuse", lights.get(1).getMaterial().getDiffuse());
     shader.setVec3(gl, "light2.specular", lights.get(1).getMaterial().getSpecular());
 
-    shader.setVec3(gl, "spotLight.position", camera.getPosition());
+    shader.setVec3(gl, "spotLight.position", new Vec3(5 ,(5 * 2) + (5 / 4) + (5 / 8),15));
     shader.setVec3(gl, "spotLight.ambient", lights.get(2).getMaterial().getAmbient());
     shader.setVec3(gl, "spotLight.diffuse", lights.get(2).getMaterial().getDiffuse());
     shader.setVec3(gl, "spotLight.specular", lights.get(2).getMaterial().getSpecular());
-    shader.setVec3(gl, "spotLight.direction", camera.getFront());
+    shader.setVec3(gl, "spotLight.direction", new Vec3(0,-2, 0));
     shader.setFloat(gl,"spotLight.cutOff", (float)Math.cos(Math.toRadians(12.5f)));
     shader.setFloat(gl,"spotLight.outerCutOff", (float)Math.cos(Math.toRadians(17.5f)));
 
