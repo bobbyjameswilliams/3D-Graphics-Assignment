@@ -7,6 +7,7 @@ public class Light {
   
   private Material material;
   private Vec3 position;
+  private Vec3 direction = new Vec3(0,0,0);
   private Mat4 model;
   private Shader shader;
   private Camera camera;
@@ -33,7 +34,23 @@ public class Light {
     position.y = y;
     position.z = z;
   }
-  
+
+  public void setDirection(float x, float y, float z) {
+    direction.x = x;
+    direction.y = y;
+    direction.z = z;
+  }
+
+  public void setDirection(Vec3 v){
+    direction.x = v.x;
+    direction.y = v.y;
+    direction.z = v.z;
+  }
+
+  public Vec3 getDirection(){
+    return direction;
+  }
+
   public Vec3 getPosition() {
     return position;
   }

@@ -1,4 +1,3 @@
-import com.jogamp.newt.Window;
 import gmaths.*;
 
 import com.jogamp.opengl.*;
@@ -9,7 +8,7 @@ import java.util.List;
 public class Museum_GLEventListener implements GLEventListener {
   
   private static final boolean DISPLAY_SHADERS = false;
-    
+
   public Museum_GLEventListener(Camera camera) {
     this.camera = camera;
     this.camera.setPosition(new Vec3(4f,12f,18f));
@@ -497,15 +496,18 @@ public class Museum_GLEventListener implements GLEventListener {
     mainLight.setPosition(4,30,4);
     spotLight = new Light(gl);
     spotLight.setCamera(camera);
+    spotLight.setDirection(0,0,0);
 
     List<Light> lights = new java.util.ArrayList<>(Collections.emptyList());
     lights.add(light);
     lights.add(mainLight);
     lights.add(spotLight);
 
+
     float roomSize = 40;
     float viewOffset = 12;
     float relativeViewOffset = (roomSize/2) + viewOffset;
+
 
     //floor
     floor = initialise_floor(gl, camera, lights, woodFloorTexture, roomSize);
@@ -549,6 +551,7 @@ public class Museum_GLEventListener implements GLEventListener {
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
     mainLight.render(gl);
+    spotLight.setDirection( lampSwing());
     spotLight.render(gl);
     floor.render(gl);
     backwall.render(gl);
@@ -562,17 +565,18 @@ public class Museum_GLEventListener implements GLEventListener {
     eggRoot.draw(gl);
     lampRoot.draw(gl);
 
-    lampSwing();
+
   }
 
-  private void lampSwing() {
+  private Vec3 lampSwing() {
     double elapsedTime = getSeconds()-startTime;
     float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/2);
     lampRotate.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
     lampRotate.update();
-  }
+    return new Vec3(0, -45, -(rotateAngle - 180));
+  };
 
-  
+
   // The light's postion is continually being changed, so needs to be calculated for each frame.
   private Vec3 getLightPosition() {
     double elapsedTime = getSeconds()-startTime;
