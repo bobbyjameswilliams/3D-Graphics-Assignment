@@ -123,5 +123,9 @@ public class Camera {
     up = Vec3.crossProduct(right, front);
     up.normalize();
   }
-    
+
+  //Temporary getter while testing spot light
+  public Vec3 getFront() {
+    return front;
+  }
 }

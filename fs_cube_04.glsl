@@ -16,9 +16,21 @@ struct Light {
   vec3 diffuse;
   vec3 specular;
 };
+struct SpotLight {
+  vec3 position;
+  vec3 direction;
+  vec3 ambient;
+  vec3 diffuse;
+  vec3 specular;
+
+  float cutOff;
+  float outerCutOff;
+
+};
 
 uniform Light light1;
 uniform Light light2;
+uniform SpotLight spotLight;
 
 struct Material {
   vec3 ambient;
@@ -30,22 +42,40 @@ struct Material {
 uniform Material material;
 
 void main() {
-  //Light 1
-  // ambient
 
+  //SpotLight
   vec3 totalDiffuse = vec3(0.0);
   vec3 totalSpecular = vec3(0.0);
-  vec3 ambient = light1.ambient * vec3(texture(first_texture, aTexCoord));
+  vec3 ambient = ((light1.ambient + light2.ambient)/2) * material.ambient * texture(first_texture, aTexCoord).rgb;
+
   // diffuse
   vec3 norm = normalize(aNormal);
-  vec3 lightDir = normalize(light1.position - aPos);
+  vec3 lightDir = normalize(spotLight.position - aPos);
   float diff = max(dot(norm, lightDir), 0.0);
-  totalDiffuse = totalDiffuse + light1.diffuse * diff * vec3(texture(first_texture, aTexCoord));
-
+  totalDiffuse = totalDiffuse + spotLight.diffuse * diff * vec3(texture(first_texture, aTexCoord));
   // specular
   vec3 viewDir = normalize(viewPos - aPos);
   vec3 reflectDir = reflect(-lightDir, norm);
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+  totalSpecular = totalSpecular + spotLight.specular * spec * vec3(texture(second_texture, aTexCoord));
+  // spotlight
+  float theta = dot(lightDir, normalize(-spotLight.direction));
+  float epsilon = (spotLight.cutOff - spotLight.outerCutOff);
+  float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0, 1.0);
+  totalDiffuse *= intensity;
+  totalSpecular *= intensity;
+
+  //Light 1
+  // diffuse
+  norm = normalize(aNormal);
+  lightDir = normalize(light1.position - aPos);
+  diff = max(dot(norm, lightDir), 0.0);
+  totalDiffuse = totalDiffuse + light1.diffuse * diff * vec3(texture(first_texture, aTexCoord));
+
+  // specular
+  viewDir = normalize(viewPos - aPos);
+  reflectDir = reflect(-lightDir, norm);
+  spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
   totalSpecular = totalSpecular + light1.specular * spec * vec3(texture(second_texture, aTexCoord));
 
   //light 2

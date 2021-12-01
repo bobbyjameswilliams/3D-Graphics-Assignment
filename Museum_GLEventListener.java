@@ -1,4 +1,3 @@
-import com.jogamp.newt.Window;
 import gmaths.*;
 
 import com.jogamp.opengl.*;
@@ -9,7 +8,7 @@ import java.util.List;
 public class Museum_GLEventListener implements GLEventListener {
   
   private static final boolean DISPLAY_SHADERS = false;
-    
+
   public Museum_GLEventListener(Camera camera) {
     this.camera = camera;
     this.camera.setPosition(new Vec3(4f,12f,18f));
@@ -123,6 +122,7 @@ public class Museum_GLEventListener implements GLEventListener {
   private List<Light> lights;
   private Light light;
   private Light mainLight;
+  private Light spotLight;
 
   // Roots
 
@@ -409,6 +409,11 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private void lamp_scene(GL3 gl) {
     float lampScale = 5f;
+    float baseScale;
+    float standScale;
+    float armScale;
+
+
 
     lampRoot = new NameNode("root");
     lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(15, 0, 15f));
@@ -416,47 +421,35 @@ public class Museum_GLEventListener implements GLEventListener {
 
     NameNode lampBase = new NameNode("phone base");
     Mat4 m = Mat4Transform.translate(0,lampScale/4,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((lampScale),lampScale/4,(lampScale)));
+    m = Mat4.multiply(m, Mat4Transform.scale((lampScale),
+            lampScale/4,
+            (lampScale)));
     TransformNode lampBaseTransform =  new TransformNode("phone base transform", m);
     ModelNode lampBaseShape = new ModelNode("Cube(phone base)", cube);
 
 
     NameNode lamp1 = new NameNode("lamp1");
-    m = Mat4Transform.translate(
-            0,
-            lampScale + lampScale/4,
-            0);
-    m = Mat4.multiply(m, Mat4Transform.scale(
-            (lampScale / 4),
-            (lampScale * 2),
-            (lampScale / 4)));
+    m = Mat4Transform.translate(0, lampScale + lampScale/4, 0);
+    m = Mat4.multiply(m, Mat4Transform.scale((lampScale / 4), (lampScale * 2), (lampScale / 4)));
     TransformNode lamp1Transform = new TransformNode("lamp1 transform", m);
     ModelNode lamp1Shape = new ModelNode("Cube(lamp1)", cube);
 
     NameNode lamp2 = new NameNode("lamp2");
-    m = Mat4Transform.translate(
-            (-lampScale) + lampScale/8 ,
+    m = Mat4Transform.translate((-lampScale) + lampScale/8 ,
             (lampScale * 2) + lampScale / 4 + lampScale / 8,
             0);
-    m = Mat4.multiply(m, Mat4Transform.scale(
-            (lampScale * 2),
-            (lampScale / 4),
-            (lampScale / 4)));
+    m = Mat4.multiply(m, Mat4Transform.scale((lampScale * 2), (lampScale / 4), (lampScale / 4)));
     TransformNode lamp2Transform = new TransformNode("lamp2 transform", m);
     ModelNode lamp2Shape = new ModelNode("Cube(lamp2)", cube);
 
     NameNode lampHead = new NameNode("lamp head");
     TransformNode lampHeadTranslate = new TransformNode("lamp head translate",
-            Mat4Transform.translate(
-                    -(lampScale * 2) + lampScale / 4,
-                    (lampScale * 2) + lampScale / 8,
+            Mat4Transform.translate(-(lampScale * 2),
+                    (lampScale * 2) + lampScale / 4 + lampScale / 8,
                     0));
     lampRotate = new TransformNode("lamp head rotate",Mat4Transform.rotateAroundZ(0));
     m = new Mat4(1);
-    m = Mat4.multiply(m, Mat4Transform.scale(
-            (lampScale / 4),
-            (lampScale / 4),
-            (lampScale / 4)));
+    m = Mat4.multiply(m, Mat4Transform.scale((lampScale / 4), (lampScale / 4), (lampScale / 4)));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0,0));
     TransformNode lampHeadScale = new TransformNode("lamp head scale", m);
     ModelNode lampHeadShape = new ModelNode("Cube(lamp head)", cube);
@@ -477,6 +470,7 @@ public class Museum_GLEventListener implements GLEventListener {
                   lampHeadTranslate.addChild(lampRotate);
                     lampRotate.addChild(lampHeadScale);
                       lampHeadScale.addChild(lampHeadShape);
+//                lampHead.addChild(spotLight);
   }
 
   private void initialise(GL3 gl) {
@@ -500,15 +494,20 @@ public class Museum_GLEventListener implements GLEventListener {
     mainLight = new Light(gl);
     mainLight.setCamera(camera);
     mainLight.setPosition(4,30,4);
+    spotLight = new Light(gl);
+    spotLight.setCamera(camera);
+    spotLight.setDirection(0,0,0);
 
     List<Light> lights = new java.util.ArrayList<>(Collections.emptyList());
     lights.add(light);
     lights.add(mainLight);
-    //lightList.add(spotLight);
+    lights.add(spotLight);
+
 
     float roomSize = 40;
     float viewOffset = 12;
     float relativeViewOffset = (roomSize/2) + viewOffset;
+
 
     //floor
     floor = initialise_floor(gl, camera, lights, woodFloorTexture, roomSize);
@@ -552,10 +551,13 @@ public class Museum_GLEventListener implements GLEventListener {
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
     mainLight.render(gl);
+    spotLight.setDirection( lampSwing());
+    spotLight.render(gl);
     floor.render(gl);
     backwall.render(gl);
     sidewall.render(gl);
     windowView.render(gl);
+
 //    if (animation) updateLeftFeeler();
 //    if (animation) updateRightFeeler();
     robotRoot.draw(gl);
@@ -563,17 +565,18 @@ public class Museum_GLEventListener implements GLEventListener {
     eggRoot.draw(gl);
     lampRoot.draw(gl);
 
-    lampSwing();
+
   }
 
-  private void lampSwing() {
+  private Vec3 lampSwing() {
     double elapsedTime = getSeconds()-startTime;
     float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/2);
     lampRotate.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
     lampRotate.update();
-  }
+    return new Vec3(0, -45, -(rotateAngle - 180));
+  };
 
-  
+
   // The light's postion is continually being changed, so needs to be calculated for each frame.
   private Vec3 getLightPosition() {
     double elapsedTime = getSeconds()-startTime;
