@@ -72,13 +72,13 @@ void main() {
   norm = normalize(aNormal);
   lightDir = normalize(light1.position - aPos);
   diff = max(dot(norm, lightDir), 0.0);
-  totalDiffuse = (totalDiffuse + light1.diffuse * diff * vec3(texture(first_texture, aTexCoord))) * light1.intensity_mod;
+  totalDiffuse = totalDiffuse + (light1.diffuse * diff * vec3(texture(first_texture, aTexCoord))) * light1.intensity_mod;
 
   // specular
   viewDir = normalize(viewPos - aPos);
   reflectDir = reflect(-lightDir, norm);
   spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-  totalSpecular = (totalSpecular + light1.specular * spec * vec3(texture(second_texture, aTexCoord))) * light1.intensity_mod;
+  totalSpecular = totalSpecular + (light1.specular * spec * vec3(texture(second_texture, aTexCoord))) * light1.intensity_mod;
 
   //light 2
 
@@ -87,13 +87,13 @@ void main() {
   norm = normalize(aNormal);
   lightDir = normalize(light2.position - aPos);
   diff = max(dot(norm, lightDir), 0.0);
-  totalDiffuse = (totalDiffuse + light2.diffuse * diff * vec3(texture(first_texture, aTexCoord))) * light2.intensity_mod;
+  totalDiffuse = totalDiffuse + (light2.diffuse * diff * vec3(texture(first_texture, aTexCoord))) * light2.intensity_mod;
 
   // specular
   viewDir = normalize(viewPos - aPos);
   reflectDir = reflect(-lightDir, norm);
   spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-  totalSpecular = (totalSpecular + light2.specular * spec * vec3(texture(second_texture, aTexCoord))) * light2.intensity_mod;
+  totalSpecular = totalSpecular + (light2.specular * spec * vec3(texture(second_texture, aTexCoord))) * light2.intensity_mod;
 
   vec3 result = (ambient * (light1.intensity_mod + light2.intensity_mod)/2) + totalDiffuse + totalSpecular;
   fragColor = vec4(result, 1.0);

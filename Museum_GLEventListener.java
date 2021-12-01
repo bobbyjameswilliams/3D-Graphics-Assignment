@@ -11,7 +11,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   public Museum_GLEventListener(Camera camera) {
     this.camera = camera;
-    this.camera.setPosition(new Vec3(4f,12f,18f));
+    this.camera.setPosition(new Vec3(4f,30f,40f));
   }
   
   // ***************************************************
@@ -111,8 +111,17 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
   public void turnOffMainLights() {
-
+    light.setIntensity(0);
+    mainLight.setIntensity(0);
   }
+
+  public void turnOnMainLights() {
+    light.setIntensity(1);
+    mainLight.setIntensity(1);
+  }
+
+
+
   // ***************************************************
   /* THE SCENE
    * Now define all the methods to handle the scene.
@@ -419,7 +428,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
 
     lampRoot = new NameNode("root");
-    lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(15, 0, 15f));
+    lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(15, -lampScale / 8, 15f));
     TransformNode lampTranslate = new TransformNode("lamp transform",Mat4Transform.translate(0,0,0));
 
     NameNode lampBase = new NameNode("phone base");
@@ -555,7 +564,6 @@ public class Museum_GLEventListener implements GLEventListener {
     light.render(gl);
     mainLight.render(gl);
     spotLight.setDirection( lampSwing());
-    spotLight.render(gl);
     floor.render(gl);
     backwall.render(gl);
     sidewall.render(gl);

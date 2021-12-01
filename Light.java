@@ -11,7 +11,7 @@ public class Light {
   private Mat4 model;
   private Shader shader;
   private Camera camera;
-  private float intensity = 0.5f;
+  private float intensity = 1f;
     
   public Light(GL3 gl) {
     material = new Material();
