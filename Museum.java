@@ -66,6 +66,9 @@ public class Museum extends JFrame implements ActionListener {
       b = new JButton("raised arms");
       b.addActionListener(this);
       p.add(b);
+      b = new JButton("toggle main lights");
+      b.addActionListener(this);
+      p.add(b);
     this.add(p, BorderLayout.SOUTH);
 
     addWindowListener(new WindowAdapter() {
@@ -106,6 +109,9 @@ public class Museum extends JFrame implements ActionListener {
     }
     else if (e.getActionCommand().equalsIgnoreCase("raised arms")) {
       glEventListener.raisedArms();
+    }
+    else if (e.getActionCommand().equalsIgnoreCase("toggle main lights")) {
+      glEventListener.loweredArms();
     }
     else if(e.getActionCommand().equalsIgnoreCase("quit"))
       System.exit(0);

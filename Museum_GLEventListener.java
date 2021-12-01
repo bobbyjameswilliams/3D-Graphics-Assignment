@@ -109,7 +109,10 @@ public class Museum_GLEventListener implements GLEventListener {
     rightFeelerRotate.setTransform(Mat4Transform.rotateAroundX(0));
     rightFeelerRotate.update();
   }
-  
+
+  public void turnOffMainLights() {
+
+  }
   // ***************************************************
   /* THE SCENE
    * Now define all the methods to handle the scene.
