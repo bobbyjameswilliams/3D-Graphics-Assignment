@@ -11,6 +11,7 @@ public class Light {
   private Mat4 model;
   private Shader shader;
   private Camera camera;
+  private float intensity = 1f;
     
   public Light(GL3 gl) {
     material = new Material();
@@ -45,6 +46,14 @@ public class Light {
     direction.x = v.x;
     direction.y = v.y;
     direction.z = v.z;
+  }
+
+  public void setIntensity(float i){
+    this.intensity = i;
+  }
+
+  public float getIntensity(){
+   return intensity;
   }
 
   public Vec3 getDirection(){

@@ -15,7 +15,7 @@ public class Camera {
 
   public final float YAW = -90f;
   public final float PITCH = 0f;
-  public final float KEYBOARD_SPEED = 0.2f;
+  public final float KEYBOARD_SPEED = 0.5f;
   public final float MOUSE_SPEED = 1.0f;
   
   private Vec3 position;
@@ -124,8 +124,4 @@ public class Camera {
     up.normalize();
   }
 
-  //Temporary getter while testing spot light
-  public Vec3 getFront() {
-    return front;
-  }
 }
