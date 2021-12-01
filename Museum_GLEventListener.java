@@ -78,50 +78,45 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
   public void pose1(){
-    xPosition = -4f;
-    zPosition = -20f;
-    updateMove();
+    updateMove(-4f,-20f,0);
   }
 
   public void pose2(){
-    xPosition = 7f;
-    zPosition = -15f;
-    updateMove();
+    updateMove(7f,-15f,90f);
   }
 
   public void pose3(){
-    xPosition = 5f;
-    zPosition = 5f;
-    updateMove();
+    updateMove(5f,5f,90f);
   }
 
   public void pose4(){
-    xPosition = 0f;
-    zPosition = 12f;
-    updateMove();
+    updateMove(0f,12f,180f);
   }
 
   public void pose5(){
-    xPosition = -15f;
-    zPosition = 0;
-    updateMove();
-  }
-
-  public void incXPosition() {
-    xPosition += 0.5f;
-    if (xPosition>5f) xPosition = 5f;
-    updateMove();
-  }
-   
-  public void decXPosition() {
-    xPosition -= 0.5f;
-    if (xPosition<-5f) xPosition = -5f;
-    updateMove();
+    updateMove(-15f,0f, -90f);
   }
  
-  private void updateMove() {
-    robotMoveTranslate.setTransform(Mat4Transform.translate(xPosition,0,zPosition));
+  private void updateMove(float x,float z) {
+    robotMoveTranslate.setTransform(Mat4Transform.translate(x,0,z));
     robotMoveTranslate.update();
+    xPosition = x;
+    zPosition = z;
+  }
+  private void updateMove(float x,float z, float d) {
+    //robotMoveTranslate.setTransform(Mat4Transform.translate(0,0,0));
+    //robotMoveTranslate.setTransform(Mat4Transform.rotateAroundZ(-rotation));
+    Mat4 m = new Mat4(1);
+    m = Mat4.multiply(m, Mat4Transform.translate(x,0,z));
+    m = Mat4.multiply(m, Mat4Transform.rotateAroundY(d));
+    //TransformNode transform = new TransformNode("leftarm scale", m);
+
+
+    robotMoveTranslate.setTransform(m);
+    robotMoveTranslate.update();
+    xPosition = x;
+    zPosition = z;
+    rotation = d;
   }
   
   public void loweredArms() {
@@ -173,6 +168,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private float xPosition;
   private float zPosition;
+  private float rotation = 0;
 
   private TransformNode translateX;
   private TransformNode robotMoveTranslate;
