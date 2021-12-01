@@ -86,7 +86,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
   public void pose3(){
-    updateMove(5f,5f,90f);
+    updateMove(8f,5f,90f);
   }
 
   public void pose4(){
@@ -117,6 +117,10 @@ public class Museum_GLEventListener implements GLEventListener {
     xPosition = x;
     zPosition = z;
     rotation = d;
+  }
+
+  private void updatePose(){
+
   }
   
   public void loweredArms() {
@@ -448,14 +452,15 @@ public class Museum_GLEventListener implements GLEventListener {
   private void lamp_scene(GL3 gl) {
     float lampScale = 5f;
     Vec3 baseScale = new Vec3( lampScale, lampScale/4, lampScale) ;
-    Vec3 standScale = new Vec3(lampScale / 4, lampScale * 2, lampScale / 4);
+    Vec3 standScale = new Vec3(lampScale / 4, lampScale * 4, lampScale / 4);
     Vec3 armScale = new Vec3(lampScale, lampScale / 4, lampScale / 4);
     Vec3 headScale = new Vec3(lampScale / 4, lampScale / 4, lampScale / 4);
 
     float baseHeight = lampScale/4;
-    float standHeight = lampScale + baseHeight;
-    float armHeight = standHeight + lampScale  +  lampScale / 8;
+    float standHeight = lampScale * 2 + baseHeight;
+    float armHeight = standHeight + lampScale * 2  +  lampScale / 8;
     float headHeight = armHeight;
+    System.out.print(armHeight);
 
 
 
@@ -609,7 +614,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Vec3 lampSwing() {
     double elapsedTime = getSeconds()-startTime;
-    float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/2);
+    float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/8);
     lampRotate.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
     lampRotate.update();
     return new Vec3(0, -45, -(rotateAngle - 180));
