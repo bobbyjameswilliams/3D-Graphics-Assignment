@@ -64,7 +64,7 @@ public class Model {
     shader.setVec3(gl, "light2.specular", lights.get(1).getMaterial().getSpecular());
     shader.setFloat(gl,"light2.intensity_mod", lights.get(1).getIntensity());
 
-    shader.setVec3(gl, "spotLight.position", new Vec3(5 ,(5 * 2) + (5 / 4) ,15));
+    shader.setVec3(gl, "spotLight.position", new Vec3(12 ,(5 * 2) + (5 / 4) ,5));
     shader.setVec3(gl, "spotLight.ambient", lights.get(2).getMaterial().getAmbient());
     shader.setVec3(gl, "spotLight.diffuse", lights.get(2).getMaterial().getDiffuse());
     shader.setVec3(gl, "spotLight.specular", lights.get(2).getMaterial().getSpecular());

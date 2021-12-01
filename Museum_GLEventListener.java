@@ -76,7 +76,37 @@ public class Museum_GLEventListener implements GLEventListener {
     double elapsedTime = getSeconds()-startTime;
     savedTime = elapsedTime;
   }
-   
+
+  public void pose1(){
+    xPosition = -4f;
+    zPosition = -20f;
+    updateMove();
+  }
+
+  public void pose2(){
+    xPosition = 7f;
+    zPosition = -15f;
+    updateMove();
+  }
+
+  public void pose3(){
+    xPosition = 5f;
+    zPosition = 5f;
+    updateMove();
+  }
+
+  public void pose4(){
+    xPosition = 0f;
+    zPosition = 12f;
+    updateMove();
+  }
+
+  public void pose5(){
+    xPosition = -15f;
+    zPosition = 0;
+    updateMove();
+  }
+
   public void incXPosition() {
     xPosition += 0.5f;
     if (xPosition>5f) xPosition = 5f;
@@ -90,7 +120,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
  
   private void updateMove() {
-    robotMoveTranslate.setTransform(Mat4Transform.translate(xPosition,0,0));
+    robotMoveTranslate.setTransform(Mat4Transform.translate(xPosition,0,zPosition));
     robotMoveTranslate.update();
   }
   
@@ -120,8 +150,6 @@ public class Museum_GLEventListener implements GLEventListener {
     mainLight.setIntensity(1);
   }
 
-
-
   // ***************************************************
   /* THE SCENE
    * Now define all the methods to handle the scene.
@@ -143,7 +171,9 @@ public class Museum_GLEventListener implements GLEventListener {
   private SGNode phoneRoot;
   private SGNode lampRoot;
 
-  private float xPosition = -4f;
+  private float xPosition;
+  private float zPosition;
+
   private TransformNode translateX;
   private TransformNode robotMoveTranslate;
   private TransformNode eggMoveTranslate;
@@ -256,10 +286,10 @@ public class Museum_GLEventListener implements GLEventListener {
     //
     robotRoot = new NameNode("root");
     robotMoveTranslate = new
-            TransformNode("robot transform",Mat4Transform.translate(xPosition,0,0));
+            TransformNode("robot transform",Mat4Transform.translate(xPosition,0,zPosition));
 //
     TransformNode robotTranslate = new
-            TransformNode("robot transform",Mat4Transform.translate(0,0,5f)); //-17f
+            TransformNode("robot transform",Mat4Transform.translate(0,0,0)); //-17f
 
 
     NameNode body = new NameNode("body");
@@ -421,47 +451,52 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private void lamp_scene(GL3 gl) {
     float lampScale = 5f;
-    float baseScale;
-    float standScale;
-    float armScale;
+    Vec3 baseScale = new Vec3( lampScale, lampScale/4, lampScale) ;
+    Vec3 standScale = new Vec3(lampScale / 4, lampScale * 2, lampScale / 4);
+    Vec3 armScale = new Vec3(lampScale, lampScale / 4, lampScale / 4);
+    Vec3 headScale = new Vec3(lampScale / 4, lampScale / 4, lampScale / 4);
+
+    float baseHeight = lampScale/4;
+    float standHeight = lampScale + baseHeight;
+    float armHeight = standHeight + lampScale  +  lampScale / 8;
+    float headHeight = armHeight;
+
 
 
 
     lampRoot = new NameNode("root");
-    lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(15, -lampScale / 8, 15f));
+    lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(17, -lampScale / 8, 5f));
     TransformNode lampTranslate = new TransformNode("lamp transform",Mat4Transform.translate(0,0,0));
 
     NameNode lampBase = new NameNode("phone base");
-    Mat4 m = Mat4Transform.translate(0,lampScale/4,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((lampScale),
-            lampScale/4,
-            (lampScale)));
+    Mat4 m = Mat4Transform.translate(0,baseHeight,0);
+    m = Mat4.multiply(m, Mat4Transform.scale(baseScale));
     TransformNode lampBaseTransform =  new TransformNode("phone base transform", m);
     ModelNode lampBaseShape = new ModelNode("Cube(phone base)", cube);
 
 
     NameNode lamp1 = new NameNode("lamp1");
-    m = Mat4Transform.translate(0, lampScale + lampScale/4, 0);
-    m = Mat4.multiply(m, Mat4Transform.scale((lampScale / 4), (lampScale * 2), (lampScale / 4)));
+    m = Mat4Transform.translate(0, standHeight, 0);
+    m = Mat4.multiply(m, Mat4Transform.scale(standScale));
     TransformNode lamp1Transform = new TransformNode("lamp1 transform", m);
     ModelNode lamp1Shape = new ModelNode("Cube(lamp1)", cube);
 
     NameNode lamp2 = new NameNode("lamp2");
-    m = Mat4Transform.translate((-lampScale) + lampScale/8 ,
-            (lampScale * 2) + lampScale / 4 + lampScale / 8,
+    m = Mat4Transform.translate((-lampScale/2) + lampScale/8 ,
+            armHeight,
             0);
-    m = Mat4.multiply(m, Mat4Transform.scale((lampScale * 2), (lampScale / 4), (lampScale / 4)));
+    m = Mat4.multiply(m, Mat4Transform.scale(armScale));
     TransformNode lamp2Transform = new TransformNode("lamp2 transform", m);
     ModelNode lamp2Shape = new ModelNode("Cube(lamp2)", cube);
 
     NameNode lampHead = new NameNode("lamp head");
     TransformNode lampHeadTranslate = new TransformNode("lamp head translate",
-            Mat4Transform.translate(-(lampScale * 2),
-                    (lampScale * 2) + lampScale / 4 + lampScale / 8,
+            Mat4Transform.translate(-(lampScale),
+                    headHeight,
                     0));
     lampRotate = new TransformNode("lamp head rotate",Mat4Transform.rotateAroundZ(0));
     m = new Mat4(1);
-    m = Mat4.multiply(m, Mat4Transform.scale((lampScale / 4), (lampScale / 4), (lampScale / 4)));
+    m = Mat4.multiply(m, Mat4Transform.scale(headScale));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0,0));
     TransformNode lampHeadScale = new TransformNode("lamp head scale", m);
     ModelNode lampHeadShape = new ModelNode("Cube(lamp head)", cube);
@@ -490,7 +525,7 @@ public class Museum_GLEventListener implements GLEventListener {
     int[] woodFloorTexture = TextureLibrary.loadTexture(gl, "textures/wood_floor.jpg");
     int[] wallTexture = TextureLibrary.loadTexture(gl, "textures/wallTexture.jpg");
     int[] windowViewTexture = TextureLibrary.loadTexture(gl, "textures/windowView.jpg");
-    int[] phoneTexure = TextureLibrary.loadTexture(gl, "textures/cube.jpg");
+    int[] phoneTexture = TextureLibrary.loadTexture(gl, "textures/cube.jpg");
     int[] phoneSpecular = TextureLibrary.loadTexture(gl, "textures/cube_specular.jpg");
     int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
     int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
@@ -498,8 +533,6 @@ public class Museum_GLEventListener implements GLEventListener {
     int[] textureId4 = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
     int[] textureId5 = TextureLibrary.loadTexture(gl, "textures/ven0aaa2.jpg");
     int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg");
-
-    
         
     light = new Light(gl);
     light.setCamera(camera);
@@ -538,7 +571,7 @@ public class Museum_GLEventListener implements GLEventListener {
     eye = initialise_eye(gl,camera,lights,wallTexture,textureId6);
 
     phoneBaseCube = initialise_phone_base_cube(gl,camera,lights,textureId5,textureId2);
-    mobilePhone = initialise_phone(gl,camera,lights,phoneTexure,phoneSpecular);
+    mobilePhone = initialise_phone(gl,camera,lights,phoneTexture,phoneSpecular);
 //
 //  //Calling the scene functions
     robot_scene(gl);
@@ -547,6 +580,7 @@ public class Museum_GLEventListener implements GLEventListener {
     lamp_scene(gl);
 
     robotRoot.update();  // IMPORTANT - don't forget this
+    pose1();
     phoneRoot.update();
     eggRoot.update();
     lampRoot.update();
@@ -575,8 +609,6 @@ public class Museum_GLEventListener implements GLEventListener {
     phoneRoot.draw(gl);
     eggRoot.draw(gl);
     lampRoot.draw(gl);
-
-
   }
 
   private Vec3 lampSwing() {
