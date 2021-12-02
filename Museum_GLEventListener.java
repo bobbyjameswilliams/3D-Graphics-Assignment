@@ -297,33 +297,33 @@ public class Museum_GLEventListener implements GLEventListener {
     m = Mat4.multiply(m, Mat4Transform.scale(bodyScale/2,bodyScale,bodyScale/2));
     TransformNode bodyTransform = new TransformNode("head transform", m);
     ModelNode bodyShape = new ModelNode("Sphere(body)", sphere);
-
+//Neck
     NameNode neck = new NameNode("neck");
     m = Mat4Transform.translate(0,neckHeight,0);
     m = Mat4.multiply(m, Mat4Transform.scale(neckScale, neckScale, neckScale));
     TransformNode neckTransform = new TransformNode("head transform", m);
     ModelNode neckShape = new ModelNode("Sphere(body)", sphere);
-
+//Head
     NameNode head = new NameNode("head");
     m = Mat4Transform.translate(0,headHeight,0);
     m = Mat4.multiply(m, Mat4Transform.scale(headScale,headScale ,headScale));
     TransformNode headTransform = new TransformNode("head transform", m);
     ModelNode headShape = new ModelNode("Sphere(head)", cube);
-
+//Left eye
     NameNode leftEye = new NameNode("leftEye");
     m = new Mat4(1);
     m = Mat4.multiply(m,Mat4Transform.translate(-(headScale/3),eyeHeight,(headScale/2)));
     m = Mat4.multiply(m, Mat4Transform.scale(eyeScale, eyeScale, eyeScale));
     TransformNode leftEyeTransform = new TransformNode("head transform", m);
     ModelNode leftEyeShape = new ModelNode("Sphere(eye)", eye);
-
+//Right eye
     NameNode rightEye = new NameNode("rightEye");
     m = new Mat4(1);
     m = Mat4.multiply(m,Mat4Transform.translate((headScale/3),eyeHeight,(headScale/2)));
     m = Mat4.multiply(m, Mat4Transform.scale(eyeScale, eyeScale, eyeScale));
     TransformNode rightEyeTransform = new TransformNode("head transform", m);
     ModelNode rightEyeShape = new ModelNode("Sphere(eye)", eye);
-
+//Foot
     NameNode foot = new NameNode ("foot");
     //TransformNode footTranslate = new TransformNode("foot translate", Mat4Transform.translate(0, footHeight,0));
     m = new Mat4(1);
@@ -332,11 +332,12 @@ public class Museum_GLEventListener implements GLEventListener {
     TransformNode footTransform = new TransformNode("head transform", m);
     ModelNode footShape = new ModelNode("Sphere(foot)", sphere);
 
-
+//Right arm
     NameNode rightFeeler = new NameNode("right arm");
     TransformNode rightArmTranslate = new TransformNode("rightarm translate",
             Mat4Transform.translate(-(headScale/2),feelerHeight,0));
     rightFeelerRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundZ(rightFeelerStartAngle));
+
     m = new Mat4(1);
     m = Mat4.multiply(m, Mat4Transform.scale(feelerScale,feelerScale * 10,feelerScale));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
