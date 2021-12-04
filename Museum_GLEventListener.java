@@ -291,14 +291,14 @@ public class Museum_GLEventListener implements GLEventListener {
 
     float footHeight =  footScaleFactor / 2 ;
     float bodyHeight = footHeight + footScaleFactor / 2 + bodyScaleFactor/2 ;
-    float neckHeight =  bodyHeight + bodyScaleFactor / 2 + neckScaleFactor / 2;
+    float neckHeight =  bodyHeight + bodyScaleFactor / 2 - (footHeight * 2);
     float headHeight =  neckHeight + neckScaleFactor / 2 + headScaleFactor / 2;
     float eyeHeight = neckHeight + headScaleFactor/1.5f;
     float feelerHeight = headHeight + (headScaleFactor / 2);
 
     float leftFeelerStartAngle = -30;
     float rightFeelerStartAngle = 30;
-    float footBodyAboutFootStartAngle = 0;
+    float footBodyAboutFootStartAngle = 30;
     float footBodyArticulateStartAngle = 0;
     float neckHeadStartangle = 0;
     //
@@ -320,10 +320,11 @@ public class Museum_GLEventListener implements GLEventListener {
     //Body needs a rotate node
     NameNode body = new NameNode("body");
     TransformNode bodyTranslate = new TransformNode("body translate",
-            Mat4Transform.translate(0,footHeight,0));
-    bodyRotate = new TransformNode("body rotate",Mat4Transform.rotateAroundZ(footBodyAboutFootStartAngle));
+            Mat4Transform.translate(0,footHeight * 2,0));
+    m = Mat4Transform.rotateAroundX(0);
+    bodyRotate = new TransformNode("body rotate",Mat4.multiply(m,Mat4Transform.rotateAroundZ(footBodyAboutFootStartAngle)));
 
-    m = Mat4Transform.translate(0,bodyHeight-footHeight,0);
+    m = Mat4Transform.translate(0,bodyHeight / 2,0);
     m = Mat4.multiply(m, Mat4Transform.scale(bodyScaleFactor/2,bodyScaleFactor,bodyScaleFactor/2));
     TransformNode bodyScale = new TransformNode("head transform", m);
     ModelNode bodyShape = new ModelNode("Sphere(body)", sphere);
