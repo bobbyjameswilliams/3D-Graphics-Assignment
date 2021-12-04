@@ -65,10 +65,10 @@ public class Museum_GLEventListener implements GLEventListener {
    
   private boolean animation = false;
   private double savedTime = 0;
-  private TransformNode eggMoveTranslate;
   private TransformNode phoneMoveTranslate;
   private TransformNode lampMoveTranslate;
   private Robot robot;
+  private Egg egg;
    
   public void startAnimation() {
     animation = true;
@@ -135,7 +135,6 @@ public class Museum_GLEventListener implements GLEventListener {
 
   // Roots
 
-  private SGNode eggRoot;
   private SGNode phoneRoot;
   private SGNode lampRoot;
 
@@ -244,37 +243,6 @@ public class Museum_GLEventListener implements GLEventListener {
 
   public void pose5(){
     robot.pose5();
-  }
-
-  private void egg_scene(GL3 gl){
-    float eggScale = 5f;
-
-    eggRoot = new NameNode("root");
-    eggMoveTranslate = new TransformNode("egg transform", Mat4Transform.translate(0, 0, 0f));
-    TransformNode eggTranslate = new TransformNode("egg transform",Mat4Transform.translate(0,0,0));
-
-    NameNode eggBase = new NameNode("egg base");
-    Mat4 m = Mat4Transform.translate(0,eggScale/4,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((eggScale),eggScale/2,(eggScale)));
-    TransformNode eggBaseTransform =  new TransformNode("egg base transform", m);
-    ModelNode eggBaseShape = new ModelNode("Cube(egg base)", cube);
-
-
-    NameNode egg = new NameNode("egg");
-    m = Mat4Transform.translate(0,eggScale + eggScale/2,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((eggScale),(eggScale * 2),(eggScale)));
-    TransformNode eggTransform = new TransformNode("egg transform", m);
-    ModelNode eggShape = new ModelNode("Sphere(egg)", sphere);
-
-    eggRoot.addChild(eggMoveTranslate);
-      eggMoveTranslate.addChild(eggTranslate);
-        eggTranslate.addChild(eggBase);
-          eggBase.addChild(eggBaseTransform);
-            eggBaseTransform.addChild(eggBaseShape);
-          eggBase.addChild(egg);
-            egg.addChild(eggTransform);
-              eggTransform.addChild(eggShape);
-
   }
 
   private void mobile_phone_scene(GL3 gl) {
@@ -434,14 +402,13 @@ public class Museum_GLEventListener implements GLEventListener {
 //
 //  //Calling the scene functions
     robot = new Robot(gl, cube,eye,sphere);
+    egg = new Egg(gl, cube, sphere);
     mobile_phone_scene(gl);
-    egg_scene(gl);
     lamp_scene(gl);
 
-    robot.robotRoot.update();  // IMPORTANT - don't forget this
+
     pose1();
     phoneRoot.update();
-    eggRoot.update();
     lampRoot.update();
 
 
@@ -463,11 +430,12 @@ public class Museum_GLEventListener implements GLEventListener {
     windowView.render(gl);
 
     robot.render();
+    egg.render();
 
 //    if (animation) updateLeftFeeler();
 //    if (animation) updateRightFeeler();
     phoneRoot.draw(gl);
-    eggRoot.draw(gl);
+    //eggRoot.draw(gl);
     lampRoot.draw(gl);
   }
 

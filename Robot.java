@@ -13,7 +13,7 @@ public class Robot {
     public TransformNode rightFeelerRotate;
     public TransformNode headRotate;
     public TransformNode bodyRotate;
-    public SGNode robotRoot;
+    private SGNode robotRoot;
 
     public float xPosition;
     public float zPosition;
@@ -176,6 +176,8 @@ public class Robot {
         leftFeelerTranslate.addChild(leftFeelerRotate);
         leftFeelerRotate.addChild(leftFeelerScale);
         leftFeelerScale.addChild(leftFeelerShape);
+
+        robotRoot.update();
     }
 
     public void render(){
