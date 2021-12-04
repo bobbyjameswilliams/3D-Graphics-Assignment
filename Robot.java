@@ -39,8 +39,8 @@ public class Robot {
     float feelerHeight = headHeight + (headScaleFactor / 2);
 
     //Body angles
-    float leftFeelerAngle = -30;
-    float rightFeelerAngle = 30;
+    Vec3 leftFeelerAngle = new Vec3(0,0,-30f);
+    Vec3 rightFeelerAngle = new Vec3(0,0,30f);
     Vec3 bodyRotateAngle = new Vec3(0,0,0);
     Vec3 headRotateAngle = new Vec3(0,0,0);
 
@@ -127,7 +127,7 @@ public class Robot {
         NameNode rightFeeler = new NameNode("right arm");
         TransformNode rightFeelerTranslate = new TransformNode("right feeler translate",
                 Mat4Transform.translate(-(headScaleFactor/2),feelerHeight,0));
-        rightFeelerRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundZ(rightFeelerAngle));
+        rightFeelerRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundZ(rightFeelerAngle.z));
 
         m = new Mat4(1);
         m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
@@ -139,7 +139,7 @@ public class Robot {
         NameNode leftFeeler = new NameNode("left feeler");
         TransformNode leftFeelerTranslate = new TransformNode("left feeler translate",
                 Mat4Transform.translate((headScaleFactor/2),feelerHeight,0));
-        leftFeelerRotate = new TransformNode("leftfeeler rotate",Mat4Transform.rotateAroundZ(leftFeelerAngle));
+        leftFeelerRotate = new TransformNode("leftfeeler rotate",Mat4Transform.rotateAroundZ(leftFeelerAngle.z));
 
         m = new Mat4(1);
         m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
@@ -193,35 +193,51 @@ public class Robot {
     public void pose1(){
         Vec3 head = new Vec3(-30,0,0);
         Vec3 body = new Vec3(30,0,0);
-        updatePose(head,body,30f,30f);
+
+        Vec3 leftFeeler = new Vec3(0,0,30f);
+        Vec3 rightFeeler = new Vec3(0,0,30f);
+        updatePose(head,body,leftFeeler,rightFeeler);
         updateMove(-4f,-20f,0);
     }
 
     public void pose2(){
         Vec3 head = new Vec3(-30,0,0);
         Vec3 body = new Vec3(30,0,0);
-        updatePose(head,body,40f,10f);
+
+        Vec3 leftFeeler = new Vec3(30,0,10f);
+        Vec3 rightFeeler = new Vec3(30,0,10f);
+        updatePose(head,body,leftFeeler,rightFeeler);
         updateMove(7f,-15f,90f);
     }
 
     public void pose3(){
-        Vec3 head = new Vec3(0,0,-30);
+        Vec3 head = new Vec3(-50,40,-30);
         Vec3 body = new Vec3(0,0,30);
-        updatePose(head,body,30f,30f);
+
+        Vec3 leftFeeler = new Vec3(70,0,0f);
+        Vec3 rightFeeler = new Vec3(70,0,0f);
+        updatePose(head,body,leftFeeler,rightFeeler);
         updateMove(8f,5f,90f);
     }
 
     public void pose4(){
         Vec3 head = new Vec3(0,0,-30);
         Vec3 body = new Vec3(0,0,30);
-        updatePose(head,body,30f,30f);
+
+
+        Vec3 leftFeeler = new Vec3(0,0,30f);
+        Vec3 rightFeeler = new Vec3(0,0,30f);
+        updatePose(head,body,leftFeeler,rightFeeler);
         updateMove(0f,12f,180f);
     }
 
     public void pose5(){
-        Vec3 head = new Vec3(0,0,-30);
-        Vec3 body = new Vec3(0,0,30);
-        updatePose(head,body,30f,30f);
+        Vec3 head = new Vec3(20,0,0);
+        Vec3 body = new Vec3(-40,0,0);
+
+        Vec3 leftFeeler = new Vec3(-15,0,0f);
+        Vec3 rightFeeler = new Vec3(-15,0,0f);
+        updatePose(head,body,leftFeeler,rightFeeler);
         updateMove(-15f,0f, -90f);
     }
 
@@ -247,7 +263,7 @@ public class Robot {
         this.rotation = d;
     }
 
-    private void updatePose(Vec3 head, Vec3 body, float leftFeeler, float rightFeeler){
+    private void updatePose(Vec3 head, Vec3 body, Vec3 leftFeeler, Vec3 rightFeeler){
         Mat4 m = new Mat4(1);
         m = Mat4.multiply(m,Mat4Transform.rotateAroundX(body.x));
         m = Mat4.multiply(m,Mat4Transform.rotateAroundY(body.y));
@@ -262,15 +278,23 @@ public class Robot {
         headRotate.setTransform(m);
         bodyRotate.update();
 
-        leftFeelerRotate.setTransform(Mat4Transform.rotateAroundZ(-leftFeeler));
+        m = new Mat4(1);
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundX(leftFeeler.x));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(-leftFeeler.y));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundZ(-leftFeeler.z));
+        leftFeelerRotate.setTransform(m);
         leftFeelerRotate.update();
 
-        rightFeelerRotate.setTransform(Mat4Transform.rotateAroundZ(rightFeeler));
+        m = new Mat4(1);
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundX(rightFeeler.x));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(rightFeeler.y));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundZ(rightFeeler.z));
+        rightFeelerRotate.setTransform(m);
         rightFeelerRotate.update();
 
         this.bodyRotateAngle = body;
         this.headRotateAngle = head;
-        this.leftFeelerAngle = -leftFeeler;
+        this.leftFeelerAngle = leftFeeler;
         this.rightFeelerAngle = rightFeeler;
     }
 
