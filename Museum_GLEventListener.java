@@ -193,6 +193,9 @@ public class Museum_GLEventListener implements GLEventListener {
   private TransformNode lampMoveTranslate;
   private TransformNode leftFeelerRotate;
   private TransformNode rightFeelerRotate;
+  private TransformNode headRotate;
+  private TransformNode bodyRotate;
+
   private TransformNode lampRotate;
   
   private Model initialise_floor(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
@@ -295,6 +298,9 @@ public class Museum_GLEventListener implements GLEventListener {
 
     float leftFeelerStartAngle = -30;
     float rightFeelerStartAngle = 30;
+    float footBodyAboutFootStartAngle = 0;
+    float footBodyArticulateStartAngle = 0;
+    float neckHeadStartangle = 0;
     //
     robotRoot = new NameNode("root");
     robotMoveTranslate = new
@@ -313,7 +319,11 @@ public class Museum_GLEventListener implements GLEventListener {
 
     //Body needs a rotate node
     NameNode body = new NameNode("body");
-    m = Mat4Transform.translate(0,bodyHeight,0);
+    TransformNode bodyTranslate = new TransformNode("body translate",
+            Mat4Transform.translate(0,footHeight,0));
+    bodyRotate = new TransformNode("body rotate",Mat4Transform.rotateAroundZ(footBodyAboutFootStartAngle));
+
+    m = Mat4Transform.translate(0,bodyHeight-footHeight,0);
     m = Mat4.multiply(m, Mat4Transform.scale(bodyScaleFactor/2,bodyScaleFactor,bodyScaleFactor/2));
     TransformNode bodyScale = new TransformNode("head transform", m);
     ModelNode bodyShape = new ModelNode("Sphere(body)", sphere);
@@ -358,14 +368,15 @@ public class Museum_GLEventListener implements GLEventListener {
     m = new Mat4(1);
     m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
-    TransformNode rightFeelerScale = new TransformNode("rightarm scale", m);
-    ModelNode rightArmShape = new ModelNode("Cube(right arm)", cube);
+    TransformNode rightFeelerScale = new TransformNode("right feeler scale", m);
+    ModelNode rightArmShape = new ModelNode("Cube(right feeler)", cube);
 
     //Left Feeler
     NameNode leftFeeler = new NameNode("left arm");
-    TransformNode leftFeelerTranslate = new TransformNode("leftarm translate",
+    TransformNode leftFeelerTranslate = new TransformNode("left feeler translate",
             Mat4Transform.translate((headScaleFactor/2),feelerHeight,0));
-    leftFeelerRotate = new TransformNode("leftarm rotate",Mat4Transform.rotateAroundZ(leftFeelerStartAngle));
+    leftFeelerRotate = new TransformNode("leftfeeler rotate",Mat4Transform.rotateAroundZ(leftFeelerStartAngle));
+
     m = new Mat4(1);
     m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
@@ -379,10 +390,12 @@ public class Museum_GLEventListener implements GLEventListener {
           foot.addChild(footTransform);
             footTransform.addChild(footShape);
               foot.addChild(body);
-                body.addChild(neck);
+                body.addChild(bodyTranslate);
+                bodyTranslate.addChild(bodyRotate);
+                  bodyRotate.addChild(neck);
                   neck.addChild(neckTransform);
                     neckTransform.addChild(neckShape);
-                body.addChild(bodyScale);
+                bodyRotate.addChild(bodyScale);
                     bodyScale.addChild(bodyShape);
                   neck.addChild(head);
                     head.addChild(headScale);
