@@ -292,15 +292,15 @@ public class Museum_GLEventListener implements GLEventListener {
     float footHeight =  footScaleFactor / 2 ;
     float bodyHeight = footHeight + footScaleFactor / 2 + bodyScaleFactor/2 ;
     float neckHeight =  bodyHeight + bodyScaleFactor / 2 - (footHeight * 2);
-    float headHeight =  neckHeight + neckScaleFactor / 2 + headScaleFactor / 2;
-    float eyeHeight = neckHeight + headScaleFactor/1.5f;
+    float headHeight =  neckScaleFactor / 2 + headScaleFactor / 2;
+    float eyeHeight = headHeight + headScaleFactor/10 ;
     float feelerHeight = headHeight + (headScaleFactor / 2);
 
     float leftFeelerStartAngle = -30;
     float rightFeelerStartAngle = 30;
     float footBodyAboutFootStartAngle = 30;
     float footBodyArticulateStartAngle = 0;
-    float neckHeadStartangle = 0;
+    float neckHeadStartangle = 30;
     //
     robotRoot = new NameNode("root");
     robotMoveTranslate = new
@@ -338,7 +338,12 @@ public class Museum_GLEventListener implements GLEventListener {
 
     //Head needs a rotate node (between it and neck)
     //Head
+
     NameNode head = new NameNode("head");
+    TransformNode headTranslate = new TransformNode("body translate",
+            Mat4Transform.translate(0,neckHeight,0));
+    m = Mat4Transform.rotateAroundX(0);
+    headRotate = new TransformNode("head rotate",Mat4.multiply(m,Mat4Transform.rotateAroundZ(neckHeadStartangle)));
     m = Mat4Transform.translate(0,headHeight,0);
     m = Mat4.multiply(m, Mat4Transform.scale(headScaleFactor,headScaleFactor ,headScaleFactor));
     TransformNode headScale = new TransformNode("head transform", m);
@@ -398,21 +403,22 @@ public class Museum_GLEventListener implements GLEventListener {
                     neckTransform.addChild(neckShape);
                 bodyRotate.addChild(bodyScale);
                     bodyScale.addChild(bodyShape);
-                  neck.addChild(head);
-                    head.addChild(headScale);
+                  neck.addChild(headTranslate);
+                    headTranslate.addChild(headRotate);
+                    headRotate.addChild(headScale);
                       headScale.addChild(headShape);
-                    head.addChild(leftEye);
+                    headRotate.addChild(leftEye);
                       leftEye.addChild(leftEyeTransform);
                         leftEyeTransform.addChild(leftEyeShape);
-                    head.addChild(rightEye);
+                    headRotate.addChild(rightEye);
                       rightEye.addChild(rightEyeTransform);
                         rightEyeTransform.addChild(rightEyeShape);
-                    head.addChild(rightFeeler);
+                    headRotate.addChild(rightFeeler);
                       rightFeeler.addChild(rightFeelerTranslate);
                         rightFeelerTranslate.addChild(rightFeelerRotate);
                           rightFeelerRotate.addChild(rightFeelerScale);
                             rightFeelerScale.addChild(rightArmShape);
-                    head.addChild(leftFeeler);
+                    headRotate.addChild(leftFeeler);
                       leftFeeler.addChild(leftFeelerTranslate);
                         leftFeelerTranslate.addChild(leftFeelerRotate);
                           leftFeelerRotate.addChild(leftFeelerScale);
