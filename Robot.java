@@ -191,16 +191,16 @@ public class Robot {
     }
 
     public void pose1(){
-        Vec3 head = new Vec3(0,0,-30);
-        Vec3 body = new Vec3(0,0,30);
+        Vec3 head = new Vec3(-30,0,0);
+        Vec3 body = new Vec3(30,0,0);
         updatePose(head,body,30f,30f);
         updateMove(-4f,-20f,0);
     }
 
     public void pose2(){
-        Vec3 head = new Vec3(0,0,-30);
-        Vec3 body = new Vec3(0,0,30);
-        updatePose(head,body,30f,30f);
+        Vec3 head = new Vec3(-30,0,0);
+        Vec3 body = new Vec3(30,0,0);
+        updatePose(head,body,40f,10f);
         updateMove(7f,-15f,90f);
     }
 
@@ -249,14 +249,14 @@ public class Robot {
 
     private void updatePose(Vec3 head, Vec3 body, float leftFeeler, float rightFeeler){
         Mat4 m = new Mat4(1);
-        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(body.x));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundX(body.x));
         m = Mat4.multiply(m,Mat4Transform.rotateAroundY(body.y));
         m = Mat4.multiply(m,Mat4Transform.rotateAroundZ(body.z));
         bodyRotate.setTransform(m);
         bodyRotate.update();
 
         m = new Mat4(1);
-        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(head.x));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundX(head.x));
         m = Mat4.multiply(m,Mat4Transform.rotateAroundY(head.y));
         m = Mat4.multiply(m,Mat4Transform.rotateAroundZ(head.z));
         headRotate.setTransform(m);
