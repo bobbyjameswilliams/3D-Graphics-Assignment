@@ -97,6 +97,9 @@ public class Model {
     render(gl, modelMatrix);
   }
 
+  public Material getMaterial(){
+    return this.material;
+  }
 
   public void dispose(GL3 gl) {
     mesh.dispose(gl);

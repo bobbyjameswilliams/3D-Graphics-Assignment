@@ -103,10 +103,10 @@ public class Museum extends JFrame implements ActionListener {
       glEventListener.pose5();
     }
     else if (e.getActionCommand().equalsIgnoreCase("day")) {
-
+      glEventListener.outsideDay();
     }
     else if (e.getActionCommand().equalsIgnoreCase("night")) {
-      glEventListener.loweredArms();
+      glEventListener.outsideNight();
     }
     else if (e.getActionCommand().equalsIgnoreCase("raised arms")) {
       glEventListener.raisedArms();

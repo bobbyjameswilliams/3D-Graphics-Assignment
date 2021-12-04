@@ -103,6 +103,7 @@ public class Museum_GLEventListener implements GLEventListener {
     xPosition = x;
     zPosition = z;
   }
+
   private void updateMove(float x,float z, float d) {
     //robotMoveTranslate.setTransform(Mat4Transform.translate(0,0,0));
     //robotMoveTranslate.setTransform(Mat4Transform.rotateAroundZ(-rotation));
@@ -122,7 +123,18 @@ public class Museum_GLEventListener implements GLEventListener {
   private void updatePose(){
 
   }
-  
+
+  public void outsideNight(){
+    windowView.getMaterial().setAmbient(0.1f,0.1f,0.1f);
+    //Slightly red to simulate dusk
+    windowView.getMaterial().setDiffuse(0.3f,0.2f,0.2f);
+  }
+
+  public void outsideDay(){
+    windowView.getMaterial().setAmbient(1f,1f,1f);
+    windowView.getMaterial().setDiffuse(0.6f,0.6f,0.6f);
+  }
+
   public void loweredArms() {
     stopAnimation();
     leftFeelerRotate.setTransform(Mat4Transform.rotateAroundX(180));
@@ -215,7 +227,7 @@ public class Museum_GLEventListener implements GLEventListener {
   private Model initialise_skybox(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize, float relativeViewOffset){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
-    Material material = new Material(new Vec3(1f, 1f, 1f), new Vec3(1f, 1f, 1f), new Vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    Material material = new Material(new Vec3(1f, 1f, 1f), new Vec3(0.6f, 0.6f, 0.6f), new Vec3(0.0f, 0.0f, 0.0f), 1.0f);
     Mat4 modelMatrix =  Mat4Transform.translate(-relativeViewOffset,(roomSize/2),0);
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundZ(-90));
@@ -552,7 +564,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
 
     float roomSize = 40;
-    float viewOffset = 12;
+    float viewOffset = 8;
     float relativeViewOffset = (roomSize/2) + viewOffset;
 
 
