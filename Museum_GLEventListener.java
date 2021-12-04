@@ -48,6 +48,7 @@ public class Museum_GLEventListener implements GLEventListener {
     render(gl);
   }
 
+
   /* Clean up memory, if necessary */
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
@@ -65,16 +66,18 @@ public class Museum_GLEventListener implements GLEventListener {
    
   private boolean animation = false;
   private double savedTime = 0;
-  private TransformNode lampMoveTranslate;
   private Robot robot;
   private Egg egg;
   private Mobile phone;
-   
+  private Lamp lamp;
+
+
   public void startAnimation() {
     animation = true;
     startTime = getSeconds()-savedTime;
   }
-   
+
+
   public void stopAnimation() {
     animation = false;
     double elapsedTime = getSeconds()-startTime;
@@ -88,10 +91,12 @@ public class Museum_GLEventListener implements GLEventListener {
     windowView.getMaterial().setDiffuse(0.3f,0.2f,0.2f);
   }
 
+
   public void outsideDay(){
     windowView.getMaterial().setAmbient(1f,1f,1f);
     windowView.getMaterial().setDiffuse(0.6f,0.6f,0.6f);
   }
+
 
   public void loweredArms() {
     stopAnimation();
@@ -100,7 +105,8 @@ public class Museum_GLEventListener implements GLEventListener {
     robot.rightFeelerRotate.setTransform(Mat4Transform.rotateAroundX(180));
     robot.rightFeelerRotate.update();
   }
-   
+
+
   public void raisedArms() {
     stopAnimation();
     robot.leftFeelerRotate.setTransform(Mat4Transform.rotateAroundX(0));
@@ -109,15 +115,44 @@ public class Museum_GLEventListener implements GLEventListener {
     robot.rightFeelerRotate.update();
   }
 
+
   public void turnOffMainLights() {
     light.setIntensity(0);
     mainLight.setIntensity(0);
   }
 
+
   public void turnOnMainLights() {
     light.setIntensity(1);
     mainLight.setIntensity(1);
   }
+
+
+  // ROBOTS POSES
+  public void pose1(){
+    robot.pose1();
+  }
+
+
+  public void pose2(){
+    robot.pose2();
+  }
+
+
+  public void pose3(){
+    robot.pose3();
+  }
+
+
+  public void pose4(){
+    robot.pose4();
+  }
+
+
+  public void pose5(){
+    robot.pose5();
+  }
+
 
   // ***************************************************
   /* THE SCENE
@@ -133,18 +168,8 @@ public class Museum_GLEventListener implements GLEventListener {
   private Light mainLight;
   private Light spotLight;
 
-  // Roots
+  //Initialise models
 
-  private SGNode phoneRoot;
-  private SGNode lampRoot;
-
-  private float rotation = 0;
-
-  private TransformNode translateX;
-
-
-  private TransformNode lampRotate;
-  
   private Model initialise_floor(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
@@ -152,6 +177,7 @@ public class Museum_GLEventListener implements GLEventListener {
     Mat4 modelMatrix = Mat4Transform.scale(roomSize,1f,roomSize);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
+
 
   private Model initialise_backwall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, DoorWall.vertices.clone(), DoorWall.indices.clone());
@@ -162,6 +188,7 @@ public class Museum_GLEventListener implements GLEventListener {
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.scale(roomSize ,1f,roomSize)); ;
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
+
 
   private Model initialise_sidewall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, WindowedWall.vertices.clone(), WindowedWall.indices.clone());
@@ -174,6 +201,7 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
 
+
   private Model initialise_skybox(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize, float relativeViewOffset){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
@@ -185,6 +213,7 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
   }
 
+
   private Model initialise_sphere(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[] texture2){
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
     Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
@@ -192,6 +221,7 @@ public class Museum_GLEventListener implements GLEventListener {
     Mat4 modelMatrix = new Mat4(1);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
+
 
   private Model initialise_cube(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
@@ -201,6 +231,7 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
+
   private Model initialise_phone_base_cube(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
     Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
@@ -208,6 +239,7 @@ public class Museum_GLEventListener implements GLEventListener {
     Mat4 modelMatrix = new Mat4(1);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
+
 
   private Model initialise_phone(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, PhoneCube.vertices.clone(), PhoneCube.indices.clone());
@@ -217,6 +249,7 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
+
   private Model initialise_eye(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[] texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
     Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
@@ -225,102 +258,9 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
-  public void pose1(){
-    robot.pose1();
-  }
 
-  public void pose2(){
-    robot.pose2();
-  }
+  //Initialise and scene
 
-  public void pose3(){
-    robot.pose3();
-  }
-
-  public void pose4(){
-    robot.pose4();
-  }
-
-  public void pose5(){
-    robot.pose5();
-  }
-
-
-
-
-
-
-  private void lamp_scene(GL3 gl) {
-    float lampScale = 5f;
-    Vec3 baseScale = new Vec3( lampScale, lampScale/4, lampScale) ;
-    Vec3 standScale = new Vec3(lampScale / 4, lampScale * 4, lampScale / 4);
-    Vec3 armScale = new Vec3(lampScale, lampScale / 4, lampScale / 4);
-    Vec3 headScale = new Vec3(lampScale / 4, lampScale / 4, lampScale / 4);
-
-    float baseHeight = lampScale/4;
-    float standHeight = lampScale * 2 + baseHeight;
-    float armHeight = standHeight + lampScale * 2  +  lampScale / 8;
-    float headHeight = armHeight;
-    System.out.print(armHeight);
-
-
-
-
-    lampRoot = new NameNode("root");
-    lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(17, -lampScale / 8, 5f));
-    TransformNode lampTranslate = new TransformNode("lamp transform",Mat4Transform.translate(0,0,0));
-
-    NameNode lampBase = new NameNode("phone base");
-    Mat4 m = Mat4Transform.translate(0,baseHeight,0);
-    m = Mat4.multiply(m, Mat4Transform.scale(baseScale));
-    TransformNode lampBaseTransform =  new TransformNode("phone base transform", m);
-    ModelNode lampBaseShape = new ModelNode("Cube(phone base)", cube);
-
-
-    NameNode lamp1 = new NameNode("lamp1");
-    m = Mat4Transform.translate(0, standHeight, 0);
-    m = Mat4.multiply(m, Mat4Transform.scale(standScale));
-    TransformNode lamp1Transform = new TransformNode("lamp1 transform", m);
-    ModelNode lamp1Shape = new ModelNode("Cube(lamp1)", cube);
-
-    NameNode lamp2 = new NameNode("lamp2");
-    m = Mat4Transform.translate((-lampScale/2) + lampScale/8 ,
-            armHeight,
-            0);
-    m = Mat4.multiply(m, Mat4Transform.scale(armScale));
-    TransformNode lamp2Transform = new TransformNode("lamp2 transform", m);
-    ModelNode lamp2Shape = new ModelNode("Cube(lamp2)", cube);
-
-    NameNode lampHead = new NameNode("lamp head");
-    TransformNode lampHeadTranslate = new TransformNode("lamp head translate",
-            Mat4Transform.translate(-(lampScale),
-                    headHeight,
-                    0));
-    lampRotate = new TransformNode("lamp head rotate",Mat4Transform.rotateAroundZ(0));
-    m = new Mat4(1);
-    m = Mat4.multiply(m, Mat4Transform.scale(headScale));
-    m = Mat4.multiply(m, Mat4Transform.translate(0,0,0));
-    TransformNode lampHeadScale = new TransformNode("lamp head scale", m);
-    ModelNode lampHeadShape = new ModelNode("Cube(lamp head)", cube);
-
-    lampRoot.addChild(lampMoveTranslate);
-      lampMoveTranslate.addChild(lampTranslate);
-        lampTranslate.addChild(lampBase);
-          lampBase.addChild(lampBaseTransform);
-          lampBaseTransform.addChild(lampBaseShape);
-           lampBase.addChild(lamp1);
-            lamp1.addChild(lamp1Transform);
-              lamp1Transform.addChild(lamp1Shape);
-            lamp1.addChild(lamp2);
-              lamp2.addChild(lamp2Transform);
-                lamp2Transform.addChild(lamp2Shape);
-              lamp2.addChild(lampHead);
-                lampHead.addChild(lampHeadTranslate);
-                  lampHeadTranslate.addChild(lampRotate);
-                    lampRotate.addChild(lampHeadScale);
-                      lampHeadScale.addChild(lampHeadShape);
-//                lampHead.addChild(spotLight);
-  }
 
   private void initialise(GL3 gl) {
     createRandomNumbers();
@@ -350,7 +290,6 @@ public class Museum_GLEventListener implements GLEventListener {
     lights.add(mainLight);
     lights.add(spotLight);
 
-
     float roomSize = 40;
     float viewOffset = 8;
     float relativeViewOffset = (roomSize/2) + viewOffset;
@@ -375,24 +314,23 @@ public class Museum_GLEventListener implements GLEventListener {
     phoneBaseCube = initialise_phone_base_cube(gl,camera,lights,textureId5,textureId2);
     mobilePhone = initialise_phone(gl,camera,lights,phoneTexture,phoneSpecular);
 //
-//  //Calling the scene functions
+//  //Creating classes for scene objects
     robot = new Robot(gl, cube,eye,sphere);
     egg = new Egg(gl, cube, sphere);
     phone = new Mobile(gl,mobilePhone, phoneBaseCube);
-    lamp_scene(gl);
+    lamp = new Lamp(gl,cube,startTime);
 
-
+    //Default robot pose is pose 1
     pose1();
-    lampRoot.update();
-    lampRoot.print(0,false);
   }
- 
+
+
   private void render(GL3 gl) {
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
     light.setPosition(getLightPosition());  // changing light position each frame
     light.render(gl);
     mainLight.render(gl);
-    spotLight.setDirection( lampSwing());
+    spotLight.setDirection(lamp.lampSwing());
     floor.render(gl);
     backwall.render(gl);
     sidewall.render(gl);
@@ -401,19 +339,9 @@ public class Museum_GLEventListener implements GLEventListener {
     robot.render();
     egg.render();
     phone.render();
-
-//    if (animation) updateLeftFeeler();
-//    if (animation) updateRightFeeler();
-    lampRoot.draw(gl);
+    lamp.render();
   }
 
-  private Vec3 lampSwing() {
-    double elapsedTime = getSeconds()-startTime;
-    float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/8);
-    lampRotate.setTransform(Mat4Transform.rotateAroundX(rotateAngle));
-    lampRotate.update();
-    return new Vec3(0, -45, -(rotateAngle - 180));
-  };
 
   // The light's postion is continually being changed, so needs to be calculated for each frame.
   private Vec3 getLightPosition() {

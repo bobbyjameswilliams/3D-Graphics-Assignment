@@ -17,7 +17,7 @@ public class Egg {
         this.gl = gl;
         this.cube = cube;
         this.sphere = sphere;
-        sceneGraph();
+        this.sceneGraph();
     }
 
     private void sceneGraph(){

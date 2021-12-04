@@ -16,7 +16,7 @@ public class Mobile {
         this.gl = gl;
         this.mobilePhone = mobilePhone;
         this.phoneBaseCube = phoneBaseCube;
-        sceneGraph();
+        this.sceneGraph();
     }
 
     private void sceneGraph(){

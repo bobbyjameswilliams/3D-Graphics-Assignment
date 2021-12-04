@@ -44,7 +44,7 @@ public class Robot {
         this.sphere = sphere;
         this.eye = eye;
         this.cube = cube;
-        sceneGraph();
+        this.sceneGraph();
     }
 
     private void sceneGraph(){
