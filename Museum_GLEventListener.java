@@ -65,10 +65,10 @@ public class Museum_GLEventListener implements GLEventListener {
    
   private boolean animation = false;
   private double savedTime = 0;
-  private TransformNode phoneMoveTranslate;
   private TransformNode lampMoveTranslate;
   private Robot robot;
   private Egg egg;
+  private Mobile phone;
    
   public void startAnimation() {
     animation = true;
@@ -245,35 +245,10 @@ public class Museum_GLEventListener implements GLEventListener {
     robot.pose5();
   }
 
-  private void mobile_phone_scene(GL3 gl) {
-    float phoneScale = 5f;
-
-    phoneRoot = new NameNode("root");
-    phoneMoveTranslate = new TransformNode("phone transform", Mat4Transform.translate(15, 0, -15f));
-    TransformNode phoneTranslate = new TransformNode("phone transform",Mat4Transform.translate(0,0,0));
-
-    NameNode phoneBase = new NameNode("phone base");
-    Mat4 m = Mat4Transform.translate(0,phoneScale/4,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((phoneScale),phoneScale/2,(phoneScale)));
-    TransformNode phoneBaseTransform =  new TransformNode("phone base transform", m);
-    ModelNode phoneBaseShape = new ModelNode("Cube(phone base)", phoneBaseCube);
 
 
-    NameNode phone = new NameNode("phone");
-    m = Mat4Transform.translate(0,phoneScale + phoneScale/2,0);
-    m = Mat4.multiply(m, Mat4Transform.scale((phoneScale),(phoneScale * 2),(phoneScale / 4)));
-    TransformNode phoneTransform = new TransformNode("phone transform", m);
-    ModelNode phoneShape = new ModelNode("Cube(phone)", mobilePhone);
 
-    phoneRoot.addChild(phoneMoveTranslate);
-    phoneMoveTranslate.addChild(phoneTranslate);
-    phoneTranslate.addChild(phoneBase);
-    phoneBase.addChild(phoneBaseTransform);
-    phoneBaseTransform.addChild(phoneBaseShape);
-          phoneBase.addChild(phone);
-            phone.addChild(phoneTransform);
-              phoneTransform.addChild(phoneShape);
-  }
+
 
   private void lamp_scene(GL3 gl) {
     float lampScale = 5f;
@@ -403,19 +378,13 @@ public class Museum_GLEventListener implements GLEventListener {
 //  //Calling the scene functions
     robot = new Robot(gl, cube,eye,sphere);
     egg = new Egg(gl, cube, sphere);
-    mobile_phone_scene(gl);
+    phone = new Mobile(gl,mobilePhone, phoneBaseCube);
     lamp_scene(gl);
 
 
     pose1();
-    phoneRoot.update();
     lampRoot.update();
-
-
-    //eggRoot.print(0, false);
-    //eggRoot.print(0, false);
     lampRoot.print(0,false);
-    //System.exit(0);
   }
  
   private void render(GL3 gl) {
@@ -431,11 +400,10 @@ public class Museum_GLEventListener implements GLEventListener {
 
     robot.render();
     egg.render();
+    phone.render();
 
 //    if (animation) updateLeftFeeler();
 //    if (animation) updateRightFeeler();
-    phoneRoot.draw(gl);
-    //eggRoot.draw(gl);
     lampRoot.draw(gl);
   }
 
