@@ -36,7 +36,7 @@ public class Robot {
     float leftFeelerStartAngle = -30;
     float rightFeelerStartAngle = 30;
     Vec3 footBodyAboutFootStartAngle = new Vec3(0,0,0);
-    Vec3 neckHeadStartangle = new Vec3(0,0,0);
+    Vec3 neckHeadStartAngle = new Vec3(0,0,0);
 
 
     public Robot(GL3 gl, Model cube, Model eye, Model sphere){
@@ -88,14 +88,13 @@ public class Robot {
 
         //Head needs a rotate node (between it and neck)
         //Head
-
         NameNode head = new NameNode("head");
         TransformNode headTranslate = new TransformNode("body translate",
                 Mat4Transform.translate(0,neckHeight,0));
         m = new Mat4(1);
-        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(neckHeadStartangle.x));
-        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(neckHeadStartangle.y));
-        m = Mat4.multiply(m,Mat4Transform.rotateAroundZ(neckHeadStartangle.z));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(neckHeadStartAngle.x));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundY(neckHeadStartAngle.y));
+        m = Mat4.multiply(m,Mat4Transform.rotateAroundZ(neckHeadStartAngle.z));
         headRotate = new TransformNode("head rotate", m);
         m = Mat4Transform.translate(0,headHeight,0);
         m = Mat4.multiply(m, Mat4Transform.scale(headScaleFactor,headScaleFactor ,headScaleFactor));
@@ -144,38 +143,38 @@ public class Robot {
 
         //Robot Scene Graph
         robotRoot.addChild(robotMoveTranslate);
-        robotMoveTranslate.addChild(robotTranslate);
-        robotTranslate.addChild(foot);
-        foot.addChild(footTransform);
-        footTransform.addChild(footShape);
-        foot.addChild(body);
-        body.addChild(bodyTranslate);
-        bodyTranslate.addChild(bodyRotate);
-        bodyRotate.addChild(neck);
-        neck.addChild(neckTransform);
-        neckTransform.addChild(neckShape);
-        bodyRotate.addChild(bodyScale);
-        bodyScale.addChild(bodyShape);
-        neck.addChild(headTranslate);
-        headTranslate.addChild(headRotate);
-        headRotate.addChild(headScale);
-        headScale.addChild(headShape);
-        headRotate.addChild(leftEye);
-        leftEye.addChild(leftEyeTransform);
-        leftEyeTransform.addChild(leftEyeShape);
-        headRotate.addChild(rightEye);
-        rightEye.addChild(rightEyeTransform);
-        rightEyeTransform.addChild(rightEyeShape);
-        headRotate.addChild(rightFeeler);
-        rightFeeler.addChild(rightFeelerTranslate);
-        rightFeelerTranslate.addChild(rightFeelerRotate);
-        rightFeelerRotate.addChild(rightFeelerScale);
-        rightFeelerScale.addChild(rightArmShape);
-        headRotate.addChild(leftFeeler);
-        leftFeeler.addChild(leftFeelerTranslate);
-        leftFeelerTranslate.addChild(leftFeelerRotate);
-        leftFeelerRotate.addChild(leftFeelerScale);
-        leftFeelerScale.addChild(leftFeelerShape);
+            robotMoveTranslate.addChild(robotTranslate);
+                robotTranslate.addChild(foot);
+                    foot.addChild(footTransform);
+                        footTransform.addChild(footShape);
+                    foot.addChild(body);
+                        body.addChild(bodyTranslate);
+                            bodyTranslate.addChild(bodyRotate);
+                                bodyRotate.addChild(bodyScale);
+                                    bodyScale.addChild(bodyShape);
+                                bodyRotate.addChild(neck);
+                                    neck.addChild(neckTransform);
+                                        neckTransform.addChild(neckShape);
+                                    neck.addChild(headTranslate);
+                                        headTranslate.addChild(headRotate);
+                                            headRotate.addChild(headScale);
+                                                headScale.addChild(headShape);
+                                            headRotate.addChild(leftEye);
+                                                leftEye.addChild(leftEyeTransform);
+                                                    leftEyeTransform.addChild(leftEyeShape);
+                                            headRotate.addChild(rightEye);
+                                                rightEye.addChild(rightEyeTransform);
+                                                    rightEyeTransform.addChild(rightEyeShape);
+                                            headRotate.addChild(rightFeeler);
+                                                rightFeeler.addChild(rightFeelerTranslate);
+                                                    rightFeelerTranslate.addChild(rightFeelerRotate);
+                                                        rightFeelerRotate.addChild(rightFeelerScale);
+                                                            rightFeelerScale.addChild(rightArmShape);
+                                            headRotate.addChild(leftFeeler);
+                                                leftFeeler.addChild(leftFeelerTranslate);
+                                                    leftFeelerTranslate.addChild(leftFeelerRotate);
+                                                        leftFeelerRotate.addChild(leftFeelerScale);
+                                                            leftFeelerScale.addChild(leftFeelerShape);
 
         robotRoot.update();
     }
@@ -228,7 +227,7 @@ public class Robot {
     }
 
     private void updatePose(){
-
+        
     }
 
 }
