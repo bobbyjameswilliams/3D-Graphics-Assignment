@@ -279,19 +279,19 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private void robot_scene(GL3 gl){
 
-    float bodyScale = 5f;
-    float footScale = 2f;
-    float headScale = 2f;
-    float eyeScale = 0.5f;
-    float feelerScale = 0.3f;
+    float bodyScaleFactor = 5f;
+    float footScaleFactor = 2f;
+    float headScaleFactor = 2f;
+    float eyeScaleFactor = 0.5f;
+    float feelerScaleFactor = 0.3f;
+    float neckScaleFactor = bodyScaleFactor / 8;
 
-    float neckScale = bodyScale / 8;
-    float footHeight =  footScale / 2 ;
-    float bodyHeight = footHeight + footScale / 2 + bodyScale/2 ;
-    float neckHeight =  bodyHeight + bodyScale / 2 + neckScale / 2;
-    float headHeight =  neckHeight + neckScale / 2 + headScale / 2;
-    float eyeHeight = neckHeight + headScale/1.5f;
-    float feelerHeight = headHeight + (headScale / 2);
+    float footHeight =  footScaleFactor / 2 ;
+    float bodyHeight = footHeight + footScaleFactor / 2 + bodyScaleFactor/2 ;
+    float neckHeight =  bodyHeight + bodyScaleFactor / 2 + neckScaleFactor / 2;
+    float headHeight =  neckHeight + neckScaleFactor / 2 + headScaleFactor / 2;
+    float eyeHeight = neckHeight + headScaleFactor/1.5f;
+    float feelerHeight = headHeight + (headScaleFactor / 2);
 
     float leftFeelerStartAngle = -30;
     float rightFeelerStartAngle = 30;
@@ -307,54 +307,56 @@ public class Museum_GLEventListener implements GLEventListener {
     //TransformNode footTranslate = new TransformNode("foot translate", Mat4Transform.translate(0, footHeight,0));
     Mat4 m = new Mat4(1);
     m = Mat4.multiply(m,Mat4Transform.translate(0,footHeight,0));
-    m = Mat4.multiply(m, Mat4Transform.scale(footScale,footScale,footScale));
+    m = Mat4.multiply(m, Mat4Transform.scale(footScaleFactor,footScaleFactor,footScaleFactor));
     TransformNode footTransform = new TransformNode("head transform", m);
     ModelNode footShape = new ModelNode("Sphere(foot)", sphere);
 
+    //Body needs a rotate node
     NameNode body = new NameNode("body");
     m = Mat4Transform.translate(0,bodyHeight,0);
-    m = Mat4.multiply(m, Mat4Transform.scale(bodyScale/2,bodyScale,bodyScale/2));
-    TransformNode bodyTransform = new TransformNode("head transform", m);
+    m = Mat4.multiply(m, Mat4Transform.scale(bodyScaleFactor/2,bodyScaleFactor,bodyScaleFactor/2));
+    TransformNode bodyScale = new TransformNode("head transform", m);
     ModelNode bodyShape = new ModelNode("Sphere(body)", sphere);
 
     //Neck
     NameNode neck = new NameNode("neck");
     m = Mat4Transform.translate(0,neckHeight,0);
-    m = Mat4.multiply(m, Mat4Transform.scale(neckScale, neckScale, neckScale));
+    m = Mat4.multiply(m, Mat4Transform.scale(neckScaleFactor, neckScaleFactor, neckScaleFactor));
     TransformNode neckTransform = new TransformNode("head transform", m);
     ModelNode neckShape = new ModelNode("Sphere(body)", sphere);
 
+    //Head needs a rotate node (between it and neck)
     //Head
     NameNode head = new NameNode("head");
     m = Mat4Transform.translate(0,headHeight,0);
-    m = Mat4.multiply(m, Mat4Transform.scale(headScale,headScale ,headScale));
-    TransformNode headTransform = new TransformNode("head transform", m);
+    m = Mat4.multiply(m, Mat4Transform.scale(headScaleFactor,headScaleFactor ,headScaleFactor));
+    TransformNode headScale = new TransformNode("head transform", m);
     ModelNode headShape = new ModelNode("Sphere(head)", cube);
 
     //Left eye
     NameNode leftEye = new NameNode("leftEye");
     m = new Mat4(1);
-    m = Mat4.multiply(m,Mat4Transform.translate(-(headScale/3),eyeHeight,(headScale/2)));
-    m = Mat4.multiply(m, Mat4Transform.scale(eyeScale, eyeScale, eyeScale));
+    m = Mat4.multiply(m,Mat4Transform.translate(-(headScaleFactor/3),eyeHeight,(headScaleFactor/2)));
+    m = Mat4.multiply(m, Mat4Transform.scale(eyeScaleFactor, eyeScaleFactor, eyeScaleFactor));
     TransformNode leftEyeTransform = new TransformNode("head transform", m);
     ModelNode leftEyeShape = new ModelNode("Sphere(eye)", eye);
 
     //Right eye
     NameNode rightEye = new NameNode("rightEye");
     m = new Mat4(1);
-    m = Mat4.multiply(m,Mat4Transform.translate((headScale/3),eyeHeight,(headScale/2)));
-    m = Mat4.multiply(m, Mat4Transform.scale(eyeScale, eyeScale, eyeScale));
+    m = Mat4.multiply(m,Mat4Transform.translate((headScaleFactor/3),eyeHeight,(headScaleFactor/2)));
+    m = Mat4.multiply(m, Mat4Transform.scale(eyeScaleFactor, eyeScaleFactor, eyeScaleFactor));
     TransformNode rightEyeTransform = new TransformNode("head transform", m);
     ModelNode rightEyeShape = new ModelNode("Sphere(eye)", eye);
 
     //Right Feeler
     NameNode rightFeeler = new NameNode("right arm");
     TransformNode rightFeelerTranslate = new TransformNode("right feeler translate",
-            Mat4Transform.translate(-(headScale/2),feelerHeight,0));
+            Mat4Transform.translate(-(headScaleFactor/2),feelerHeight,0));
     rightFeelerRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundZ(rightFeelerStartAngle));
 
     m = new Mat4(1);
-    m = Mat4.multiply(m, Mat4Transform.scale(feelerScale,feelerScale * 10,feelerScale));
+    m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
     TransformNode rightFeelerScale = new TransformNode("rightarm scale", m);
     ModelNode rightArmShape = new ModelNode("Cube(right arm)", cube);
@@ -362,10 +364,10 @@ public class Museum_GLEventListener implements GLEventListener {
     //Left Feeler
     NameNode leftFeeler = new NameNode("left arm");
     TransformNode leftFeelerTranslate = new TransformNode("leftarm translate",
-            Mat4Transform.translate((headScale/2),feelerHeight,0));
+            Mat4Transform.translate((headScaleFactor/2),feelerHeight,0));
     leftFeelerRotate = new TransformNode("leftarm rotate",Mat4Transform.rotateAroundZ(leftFeelerStartAngle));
     m = new Mat4(1);
-    m = Mat4.multiply(m, Mat4Transform.scale(feelerScale,feelerScale * 10,feelerScale));
+    m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
     m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
     TransformNode leftFeelerScale = new TransformNode("leftarm scale", m);
     ModelNode leftFeelerShape = new ModelNode("Cube(left arm)", cube);
@@ -380,11 +382,11 @@ public class Museum_GLEventListener implements GLEventListener {
                 body.addChild(neck);
                   neck.addChild(neckTransform);
                     neckTransform.addChild(neckShape);
-                body.addChild(bodyTransform);
-                    bodyTransform.addChild(bodyShape);
+                body.addChild(bodyScale);
+                    bodyScale.addChild(bodyShape);
                   neck.addChild(head);
-                    head.addChild(headTransform);
-                      headTransform.addChild(headShape);
+                    head.addChild(headScale);
+                      headScale.addChild(headShape);
                     head.addChild(leftEye);
                       leftEye.addChild(leftEyeTransform);
                         leftEyeTransform.addChild(leftEyeShape);
