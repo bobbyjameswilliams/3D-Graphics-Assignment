@@ -13,6 +13,9 @@ public class TransformNode extends SGNode {
   public void setTransform(Mat4 m) {
     transform = new Mat4(m);
   }
+  public Mat4 getTransform() {
+    return transform;
+  };
   
   protected void update(Mat4 t) {
     worldTransform = t;

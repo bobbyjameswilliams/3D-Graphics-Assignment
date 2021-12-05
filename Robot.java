@@ -1,4 +1,5 @@
 import com.jogamp.opengl.GL3;
+import com.sun.org.apache.xpath.internal.functions.FuncFalse;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
 import gmaths.Vec3;
@@ -8,6 +9,8 @@ public class Robot {
     private Model sphere;
     private Model eye;
     private Model cube;
+
+    double startTime;
 
     //Transform Nodes
     public TransformNode robotMoveTranslate;
@@ -44,12 +47,21 @@ public class Robot {
     Vec3 bodyRotateAngle = new Vec3(0,0,0);
     Vec3 headRotateAngle = new Vec3(0,0,0);
 
+    // UNUSED EXPERIMENTAL Animation Variables
+    Vec3 oldPosition;
+    //Vec3 currentPosition;
+    Vec3 newPosition;
+    Vec3 increments = new Vec3(0,0,0);
+    float speed = 200f;
+    boolean moving = false;
 
-    public Robot(GL3 gl, Model cube, Model eye, Model sphere){
+
+    public Robot(GL3 gl, Model cube, Model eye, Model sphere, double startTime){
         this.gl = gl;
         this.sphere = sphere;
         this.eye = eye;
         this.cube = cube;
+        this.startTime = startTime;
         this.sceneGraph();
     }
 
@@ -188,6 +200,7 @@ public class Robot {
 
     public void render(){
         robotRoot.draw(gl);
+        feelerSwing();
     }
 
     public void pose1(){
@@ -296,6 +309,39 @@ public class Robot {
         this.headRotateAngle = head;
         this.leftFeelerAngle = leftFeeler;
         this.rightFeelerAngle = rightFeeler;
+    }
+
+    //UNUSED EXPERIMENTAL ANIMATION METHODS
+    private void animateTo(Vec3 oldPosition){
+        updateMove((oldPosition.x + increments.x), (oldPosition.z + increments.z) );
+    }
+
+    private void setIncrements(Vec3 oldPosition, Vec3 newPosition){
+        float xInc = (oldPosition.x - newPosition.x) /speed;
+        float yInc = 0;
+        float zInc = (oldPosition.z - newPosition.z)/speed;
+        this.newPosition = newPosition;
+        moving = true;
+        increments = new Vec3(-xInc,yInc,-zInc);
+    }
+
+    public void feelerSwing() {
+        double elapsedTime = getSeconds()-startTime;
+        float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/8 - 180);
+
+        Mat4 m = leftFeelerRotate.getTransform();
+        m = Mat4.multiply(m, Mat4Transform.rotateAroundY(-rotateAngle));
+        leftFeelerRotate.setTransform(m);
+        leftFeelerRotate.update();
+
+        m = rightFeelerRotate.getTransform();
+        m = Mat4.multiply(m, Mat4Transform.rotateAroundY(rotateAngle));
+        rightFeelerRotate.setTransform(m);
+        rightFeelerRotate.update();
+    };
+
+    private double getSeconds() {
+        return System.currentTimeMillis()/1000.0;
     }
 
 }
