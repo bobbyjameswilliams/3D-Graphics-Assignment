@@ -1,3 +1,8 @@
+/* I declare that this code is my own work */
+/* Author Bobby Williams bobby.james.williams@outlook.com */
+/* some elements of this file were extended from the work of Steve Maddock s.maddock@sheffield.ac.uk */
+
+
 import com.jogamp.opengl.GL3;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
