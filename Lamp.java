@@ -39,11 +39,11 @@ public class Lamp {
         lampMoveTranslate = new TransformNode("lamp transform", Mat4Transform.translate(17, -lampScale / 8, 5f));
         TransformNode lampTranslate = new TransformNode("lamp transform",Mat4Transform.translate(0,0,0));
 
-        NameNode lampBase = new NameNode("phone base");
+        NameNode lampBase = new NameNode("lamp base");
         Mat4 m = Mat4Transform.translate(0,baseHeight,0);
         m = Mat4.multiply(m, Mat4Transform.scale(baseScale));
-        TransformNode lampBaseTransform =  new TransformNode("phone base transform", m);
-        ModelNode lampBaseShape = new ModelNode("vertexes.Cube(phone base)", cube);
+        TransformNode lampBaseTransform =  new TransformNode("lamp base transform", m);
+        ModelNode lampBaseShape = new ModelNode("vertexes.Cube(lamp base)", cube);
 
 
         NameNode lamp1 = new NameNode("lamp1");
@@ -102,6 +102,8 @@ public class Lamp {
 
         lampRoot.update();
     }
+
+    //Handles lamp swinging animation
     public Vec3 lampSwing() {
         double elapsedTime = getSeconds()-startTime;
         float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/8);
