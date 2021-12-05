@@ -63,13 +63,16 @@ public class Museum extends JFrame implements ActionListener {
       b = new JButton("night");
       b.addActionListener(this);
       p.add(b);
-      b = new JButton("raised arms");
-      b.addActionListener(this);
-      p.add(b);
       b = new JButton("main lights off");
       b.addActionListener(this);
       p.add(b);
       b = new JButton("main lights on");
+      b.addActionListener(this);
+      p.add(b);
+      b = new JButton("spot light off");
+      b.addActionListener(this);
+      p.add(b);
+      b = new JButton("spot light on");
       b.addActionListener(this);
       p.add(b);
     this.add(p, BorderLayout.SOUTH);
@@ -108,14 +111,17 @@ public class Museum extends JFrame implements ActionListener {
     else if (e.getActionCommand().equalsIgnoreCase("night")) {
       glEventListener.outsideNight();
     }
-    else if (e.getActionCommand().equalsIgnoreCase("raised arms")) {
-      glEventListener.raisedArms();
-    }
     else if (e.getActionCommand().equalsIgnoreCase("main lights off")) {
       glEventListener.turnOffMainLights();
     }
     else if (e.getActionCommand().equalsIgnoreCase("main lights on")) {
       glEventListener.turnOnMainLights();
+    }
+    else if (e.getActionCommand().equalsIgnoreCase("spot light off")) {
+      glEventListener.turnOffSpotLight();
+    }
+    else if (e.getActionCommand().equalsIgnoreCase("spot light on")) {
+      glEventListener.turnOnSpotLight();
     }
     else if(e.getActionCommand().equalsIgnoreCase("quit"))
       System.exit(0);

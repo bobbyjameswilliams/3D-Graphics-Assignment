@@ -6,6 +6,7 @@ import gmaths.Vec3;
 public class Lamp {
     private GL3 gl;
     private Model cube;
+    private Model bulb;
 
     private float lampScale = 5f;
     private Vec3 baseScale = new Vec3( lampScale, lampScale/4, lampScale) ;
@@ -24,9 +25,11 @@ public class Lamp {
 
     private double startTime;
 
-    public Lamp(GL3 gl, Model cube, double startTime){
+    public Lamp(GL3 gl, Model cube,Model bulb, double startTime){
         this.gl = gl;
         this.cube = cube;
+        this.bulb = bulb;
+        this.startTime = startTime;
         this.sceneGraph();
     }
 
@@ -68,22 +71,33 @@ public class Lamp {
         TransformNode lampHeadScale = new TransformNode("lamp head scale", m);
         ModelNode lampHeadShape = new ModelNode("Cube(lamp head)", cube);
 
+        NameNode lampBulb = new NameNode("lamp bulb");
+        m = new Mat4(1);
+        m = Mat4Transform.translate(0,0.5f,0);
+        m = Mat4.multiply(m, Mat4Transform.scale(1,1,1));
+        TransformNode lampBulbTransform = new TransformNode("lamp bulb transform", m);
+        ModelNode lampBulbShape = new ModelNode("Sphere(lamp bulb)", bulb);
+
         lampRoot.addChild(lampMoveTranslate);
-        lampMoveTranslate.addChild(lampTranslate);
-        lampTranslate.addChild(lampBase);
-        lampBase.addChild(lampBaseTransform);
-        lampBaseTransform.addChild(lampBaseShape);
-        lampBase.addChild(lamp1);
-        lamp1.addChild(lamp1Transform);
-        lamp1Transform.addChild(lamp1Shape);
-        lamp1.addChild(lamp2);
-        lamp2.addChild(lamp2Transform);
-        lamp2Transform.addChild(lamp2Shape);
-        lamp2.addChild(lampHead);
-        lampHead.addChild(lampHeadTranslate);
-        lampHeadTranslate.addChild(lampRotate);
-        lampRotate.addChild(lampHeadScale);
-        lampHeadScale.addChild(lampHeadShape);
+            lampMoveTranslate.addChild(lampTranslate);
+                lampTranslate.addChild(lampBase);
+                    lampBase.addChild(lampBaseTransform);
+                        lampBaseTransform.addChild(lampBaseShape);
+                    lampBase.addChild(lamp1);
+                        lamp1.addChild(lamp1Transform);
+                            lamp1Transform.addChild(lamp1Shape);
+                        lamp1.addChild(lamp2);
+                            lamp2.addChild(lamp2Transform);
+                                lamp2Transform.addChild(lamp2Shape);
+                                    lamp2.addChild(lampHead);
+                                        lampHead.addChild(lampHeadTranslate);
+                                            lampHeadTranslate.addChild(lampRotate);
+                                                lampRotate.addChild(lampHeadScale);
+                                                    lampHeadScale.addChild(lampHeadShape);
+                                                lampRotate.addChild(lampBulb);
+                                                    lampBulb.addChild(lampBulbTransform);
+                                                        lampBulbTransform.addChild(lampBulbShape);
+
 
         lampRoot.update();
     }
