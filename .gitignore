@@ -11,3 +11,16 @@
 /Robot.class
 /SGNode.class
 /TransformNode.class
+/gmaths/Mat4.class
+/gmaths/Mat4Transform.class
+/gmaths/Vec3.class
+/utils/Camera$1.class
+/utils/Camera$CameraType.class
+/utils/Camera$Movement.class
+/utils/Camera.class
+/utils/Light.class
+/utils/Material.class
+/utils/Mesh.class
+/utils/Model.class
+/utils/Shader.class
+/utils/TextureLibrary.class

@@ -1,3 +1,9 @@
+/* I declare that this code is my own work */
+/* Author Bobby Williams bobby.james.williams@outlook.com */
+/* The work of Steve Maddock s.maddock@sheffield.ac.uk, with some additions by Bobby Williams */
+
+
+
 package utils;
 
 import gmaths.*;
