@@ -49,11 +49,12 @@ public class Robot {
 
     // UNUSED EXPERIMENTAL Animation Variables
     Vec3 oldPosition;
-    //Vec3 currentPosition;
+    Vec3 currentPosition;
     Vec3 newPosition;
     Vec3 increments = new Vec3(0,0,0);
     float speed = 200f;
     boolean moving = false;
+    //
 
 
     public Robot(GL3 gl, Model cube, Model eye, Model sphere, double startTime){
@@ -66,7 +67,6 @@ public class Robot {
     }
 
     private void sceneGraph(){
-        //
         robotRoot = new NameNode("root");
         robotMoveTranslate = new
                 TransformNode("robot transform", Mat4Transform.translate(xPosition,0,zPosition));
@@ -75,14 +75,13 @@ public class Robot {
 
         //Foot
         NameNode foot = new NameNode ("foot");
-        //TransformNode footTranslate = new TransformNode("foot translate", Mat4Transform.translate(0, footHeight,0));
         Mat4 m = new Mat4(1);
         m = Mat4.multiply(m,Mat4Transform.translate(0,footHeight,0));
         m = Mat4.multiply(m, Mat4Transform.scale(footScaleFactor,footScaleFactor,footScaleFactor));
         TransformNode footTransform = new TransformNode("head transform", m);
         ModelNode footShape = new ModelNode("vertexes.Sphere(foot)", sphere);
 
-        //Body needs a rotate node
+        //Body
         NameNode body = new NameNode("body");
         TransformNode bodyTranslate = new TransformNode("body translate",
                 Mat4Transform.translate(0,footHeight * 2,0));
@@ -94,20 +93,19 @@ public class Robot {
 
         m = Mat4Transform.translate(0,bodyHeight / 2,0);
         m = Mat4.multiply(m, Mat4Transform.scale(bodyScaleFactor/2,bodyScaleFactor,bodyScaleFactor/2));
-        TransformNode bodyScale = new TransformNode("head transform", m);
+        TransformNode bodyScale = new TransformNode("body transform", m);
         ModelNode bodyShape = new ModelNode("vertexes.Sphere(body)", sphere);
 
         //Neck
         NameNode neck = new NameNode("neck");
         m = Mat4Transform.translate(0,neckHeight,0);
         m = Mat4.multiply(m, Mat4Transform.scale(neckScaleFactor, neckScaleFactor, neckScaleFactor));
-        TransformNode neckTransform = new TransformNode("head transform", m);
-        ModelNode neckShape = new ModelNode("vertexes.Sphere(body)", sphere);
+        TransformNode neckTransform = new TransformNode("neck transform", m);
+        ModelNode neckShape = new ModelNode("vertexes.Sphere(neck)", sphere);
 
-        //Head needs a rotate node (between it and neck)
         //Head
         NameNode head = new NameNode("head");
-        TransformNode headTranslate = new TransformNode("body translate",
+        TransformNode headTranslate = new TransformNode("head translate",
                 Mat4Transform.translate(0,neckHeight,0));
         m = new Mat4(1);
         m = Mat4.multiply(m,Mat4Transform.rotateAroundY(headRotateAngle.x));
@@ -125,7 +123,7 @@ public class Robot {
         m = Mat4.multiply(m,Mat4Transform.translate(-(headScaleFactor/3),eyeHeight,(headScaleFactor/2)));
         m = Mat4.multiply(m, Mat4Transform.scale(eyeScaleFactor, eyeScaleFactor, eyeScaleFactor));
         TransformNode leftEyeTransform = new TransformNode("left eye transform", m);
-        ModelNode leftEyeShape = new ModelNode("vertexes.Sphere(eye)", eye);
+        ModelNode leftEyeShape = new ModelNode("vertexes.Sphere(left eye)", eye);
 
         //Right eye
         NameNode rightEye = new NameNode("rightEye");
@@ -133,13 +131,13 @@ public class Robot {
         m = Mat4.multiply(m,Mat4Transform.translate((headScaleFactor/3),eyeHeight,(headScaleFactor/2)));
         m = Mat4.multiply(m, Mat4Transform.scale(eyeScaleFactor, eyeScaleFactor, eyeScaleFactor));
         TransformNode rightEyeTransform = new TransformNode("right eye transform", m);
-        ModelNode rightEyeShape = new ModelNode("vertexes.Sphere(eye)", eye);
+        ModelNode rightEyeShape = new ModelNode("vertexes.Sphere(right eye)", eye);
 
         //Right Feeler
-        NameNode rightFeeler = new NameNode("right arm");
+        NameNode rightFeeler = new NameNode("right feeler");
         TransformNode rightFeelerTranslate = new TransformNode("right feeler translate",
                 Mat4Transform.translate(-(headScaleFactor/2),feelerHeight,0));
-        rightFeelerRotate = new TransformNode("rightarm rotate",Mat4Transform.rotateAroundZ(rightFeelerAngle.z));
+        rightFeelerRotate = new TransformNode("right feeler rotate",Mat4Transform.rotateAroundZ(rightFeelerAngle.z));
 
         m = new Mat4(1);
         m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
@@ -151,13 +149,13 @@ public class Robot {
         NameNode leftFeeler = new NameNode("left feeler");
         TransformNode leftFeelerTranslate = new TransformNode("left feeler translate",
                 Mat4Transform.translate((headScaleFactor/2),feelerHeight,0));
-        leftFeelerRotate = new TransformNode("leftfeeler rotate",Mat4Transform.rotateAroundZ(leftFeelerAngle.z));
+        leftFeelerRotate = new TransformNode("left feeler rotate",Mat4Transform.rotateAroundZ(leftFeelerAngle.z));
 
         m = new Mat4(1);
         m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
         m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
-        TransformNode leftFeelerScale = new TransformNode("leftfeeler scale", m);
-        ModelNode leftFeelerShape = new ModelNode("vertexes.Cube(left feelet)", cube);
+        TransformNode leftFeelerScale = new TransformNode("left feeler scale", m);
+        ModelNode leftFeelerShape = new ModelNode("vertexes.Cube(left feeler)", cube);
 
         //Robot Scene Graph
         robotRoot.addChild(robotMoveTranslate);
@@ -203,6 +201,8 @@ public class Robot {
         feelerSwing();
     }
 
+    //Robot poses
+
     public void pose1(){
         Vec3 head = new Vec3(-30,0,0);
         Vec3 body = new Vec3(30,0,0);
@@ -237,7 +237,6 @@ public class Robot {
         Vec3 head = new Vec3(0,0,-30);
         Vec3 body = new Vec3(0,0,30);
 
-
         Vec3 leftFeeler = new Vec3(0,0,30f);
         Vec3 rightFeeler = new Vec3(0,0,30f);
         updatePose(head,body,leftFeeler,rightFeeler);
@@ -254,6 +253,7 @@ public class Robot {
         updateMove(-15f,0f, -90f);
     }
 
+    //Update methods
     private void updateMove(float x,float z) {
         this.robotMoveTranslate.setTransform(Mat4Transform.translate(x,0,z));
         this.robotMoveTranslate.update();
@@ -262,12 +262,9 @@ public class Robot {
     }
 
     private void updateMove(float x,float z, float d) {
-        //robotMoveTranslate.setTransform(Mat4Transform.translate(0,0,0));
-        //robotMoveTranslate.setTransform(Mat4Transform.rotateAroundZ(-rotation));
         Mat4 m = new Mat4(1);
         m = Mat4.multiply(m, Mat4Transform.translate(x,0,z));
         m = Mat4.multiply(m, Mat4Transform.rotateAroundY(d));
-        //TransformNode transform = new TransformNode("leftarm scale", m);
 
         this.robotMoveTranslate.setTransform(m);
         this.robotMoveTranslate.update();
@@ -325,6 +322,7 @@ public class Robot {
         increments = new Vec3(-xInc,yInc,-zInc);
     }
 
+    //Handles feeler swing around Y
     public void feelerSwing() {
         double elapsedTime = getSeconds()-startTime;
         float rotateAngle = (180f+90f*(float)Math.sin(elapsedTime * 2)/8 - 180);
