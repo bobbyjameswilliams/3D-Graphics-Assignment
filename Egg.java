@@ -40,13 +40,13 @@ public class Egg {
         ModelNode eggShape = new ModelNode("vertexes.Sphere(egg)", sphere);
 
         eggRoot.addChild(eggMoveTranslate);
-        eggMoveTranslate.addChild(eggTranslate);
-        eggTranslate.addChild(eggBase);
-        eggBase.addChild(eggBaseTransform);
-        eggBaseTransform.addChild(eggBaseShape);
-        eggBase.addChild(egg);
-        egg.addChild(eggTransform);
-        eggTransform.addChild(eggShape);
+            eggMoveTranslate.addChild(eggTranslate);
+                eggTranslate.addChild(eggBase);
+                    eggBase.addChild(eggBaseTransform);
+                        eggBaseTransform.addChild(eggBaseShape);
+                    eggBase.addChild(egg);
+                        egg.addChild(eggTransform);
+                            eggTransform.addChild(eggShape);
 
         eggRoot.update();
     }
