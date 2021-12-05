@@ -4,6 +4,7 @@ import javax.swing.*;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
+import utils.Camera;
 
 public class Museum extends JFrame implements ActionListener {
 

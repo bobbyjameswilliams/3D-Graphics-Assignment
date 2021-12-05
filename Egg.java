@@ -1,6 +1,7 @@
 import com.jogamp.opengl.GL3;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
+import utils.Model;
 
 public class Egg {
 
@@ -29,14 +30,14 @@ public class Egg {
         Mat4 m = Mat4Transform.translate(0,eggScale/4,0);
         m = Mat4.multiply(m, Mat4Transform.scale((eggScale),eggScale/2,(eggScale)));
         TransformNode eggBaseTransform =  new TransformNode("egg base transform", m);
-        ModelNode eggBaseShape = new ModelNode("Cube(egg base)", cube);
+        ModelNode eggBaseShape = new ModelNode("vertexes.Cube(egg base)", cube);
 
 
         NameNode egg = new NameNode("egg");
         m = Mat4Transform.translate(0,eggScale + eggScale/2,0);
         m = Mat4.multiply(m, Mat4Transform.scale((eggScale),(eggScale * 2),(eggScale)));
         TransformNode eggTransform = new TransformNode("egg transform", m);
-        ModelNode eggShape = new ModelNode("Sphere(egg)", sphere);
+        ModelNode eggShape = new ModelNode("vertexes.Sphere(egg)", sphere);
 
         eggRoot.addChild(eggMoveTranslate);
         eggMoveTranslate.addChild(eggTranslate);

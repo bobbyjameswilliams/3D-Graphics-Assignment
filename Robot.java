@@ -1,8 +1,8 @@
 import com.jogamp.opengl.GL3;
-import com.sun.org.apache.xpath.internal.functions.FuncFalse;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
 import gmaths.Vec3;
+import utils.Model;
 
 public class Robot {
     private GL3 gl;
@@ -80,7 +80,7 @@ public class Robot {
         m = Mat4.multiply(m,Mat4Transform.translate(0,footHeight,0));
         m = Mat4.multiply(m, Mat4Transform.scale(footScaleFactor,footScaleFactor,footScaleFactor));
         TransformNode footTransform = new TransformNode("head transform", m);
-        ModelNode footShape = new ModelNode("Sphere(foot)", sphere);
+        ModelNode footShape = new ModelNode("vertexes.Sphere(foot)", sphere);
 
         //Body needs a rotate node
         NameNode body = new NameNode("body");
@@ -95,14 +95,14 @@ public class Robot {
         m = Mat4Transform.translate(0,bodyHeight / 2,0);
         m = Mat4.multiply(m, Mat4Transform.scale(bodyScaleFactor/2,bodyScaleFactor,bodyScaleFactor/2));
         TransformNode bodyScale = new TransformNode("head transform", m);
-        ModelNode bodyShape = new ModelNode("Sphere(body)", sphere);
+        ModelNode bodyShape = new ModelNode("vertexes.Sphere(body)", sphere);
 
         //Neck
         NameNode neck = new NameNode("neck");
         m = Mat4Transform.translate(0,neckHeight,0);
         m = Mat4.multiply(m, Mat4Transform.scale(neckScaleFactor, neckScaleFactor, neckScaleFactor));
         TransformNode neckTransform = new TransformNode("head transform", m);
-        ModelNode neckShape = new ModelNode("Sphere(body)", sphere);
+        ModelNode neckShape = new ModelNode("vertexes.Sphere(body)", sphere);
 
         //Head needs a rotate node (between it and neck)
         //Head
@@ -117,7 +117,7 @@ public class Robot {
         m = Mat4Transform.translate(0,headHeight,0);
         m = Mat4.multiply(m, Mat4Transform.scale(headScaleFactor,headScaleFactor ,headScaleFactor));
         TransformNode headScale = new TransformNode("head transform", m);
-        ModelNode headShape = new ModelNode("Sphere(head)", cube);
+        ModelNode headShape = new ModelNode("vertexes.Sphere(head)", cube);
 
         //Left eye
         NameNode leftEye = new NameNode("leftEye");
@@ -125,7 +125,7 @@ public class Robot {
         m = Mat4.multiply(m,Mat4Transform.translate(-(headScaleFactor/3),eyeHeight,(headScaleFactor/2)));
         m = Mat4.multiply(m, Mat4Transform.scale(eyeScaleFactor, eyeScaleFactor, eyeScaleFactor));
         TransformNode leftEyeTransform = new TransformNode("left eye transform", m);
-        ModelNode leftEyeShape = new ModelNode("Sphere(eye)", eye);
+        ModelNode leftEyeShape = new ModelNode("vertexes.Sphere(eye)", eye);
 
         //Right eye
         NameNode rightEye = new NameNode("rightEye");
@@ -133,7 +133,7 @@ public class Robot {
         m = Mat4.multiply(m,Mat4Transform.translate((headScaleFactor/3),eyeHeight,(headScaleFactor/2)));
         m = Mat4.multiply(m, Mat4Transform.scale(eyeScaleFactor, eyeScaleFactor, eyeScaleFactor));
         TransformNode rightEyeTransform = new TransformNode("right eye transform", m);
-        ModelNode rightEyeShape = new ModelNode("Sphere(eye)", eye);
+        ModelNode rightEyeShape = new ModelNode("vertexes.Sphere(eye)", eye);
 
         //Right Feeler
         NameNode rightFeeler = new NameNode("right arm");
@@ -145,7 +145,7 @@ public class Robot {
         m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
         m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
         TransformNode rightFeelerScale = new TransformNode("right feeler scale", m);
-        ModelNode rightArmShape = new ModelNode("Cube(right feeler)", cube);
+        ModelNode rightArmShape = new ModelNode("vertexes.Cube(right feeler)", cube);
 
         //Left Feeler
         NameNode leftFeeler = new NameNode("left feeler");
@@ -157,7 +157,7 @@ public class Robot {
         m = Mat4.multiply(m, Mat4Transform.scale(feelerScaleFactor,feelerScaleFactor * 10,feelerScaleFactor));
         m = Mat4.multiply(m, Mat4Transform.translate(0,0.5f,0));
         TransformNode leftFeelerScale = new TransformNode("leftfeeler scale", m);
-        ModelNode leftFeelerShape = new ModelNode("Cube(left feelet)", cube);
+        ModelNode leftFeelerShape = new ModelNode("vertexes.Cube(left feelet)", cube);
 
         //Robot Scene Graph
         robotRoot.addChild(robotMoveTranslate);

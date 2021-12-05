@@ -1,4 +1,5 @@
 import com.jogamp.opengl.*;
+import utils.Model;
 
 public class ModelNode extends SGNode {
 

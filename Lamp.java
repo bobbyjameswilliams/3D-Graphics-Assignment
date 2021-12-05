@@ -2,6 +2,7 @@ import com.jogamp.opengl.GL3;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
 import gmaths.Vec3;
+import utils.Model;
 
 public class Lamp {
     private GL3 gl;
@@ -42,14 +43,14 @@ public class Lamp {
         Mat4 m = Mat4Transform.translate(0,baseHeight,0);
         m = Mat4.multiply(m, Mat4Transform.scale(baseScale));
         TransformNode lampBaseTransform =  new TransformNode("phone base transform", m);
-        ModelNode lampBaseShape = new ModelNode("Cube(phone base)", cube);
+        ModelNode lampBaseShape = new ModelNode("vertexes.Cube(phone base)", cube);
 
 
         NameNode lamp1 = new NameNode("lamp1");
         m = Mat4Transform.translate(0, standHeight, 0);
         m = Mat4.multiply(m, Mat4Transform.scale(standScale));
         TransformNode lamp1Transform = new TransformNode("lamp1 transform", m);
-        ModelNode lamp1Shape = new ModelNode("Cube(lamp1)", cube);
+        ModelNode lamp1Shape = new ModelNode("vertexes.Cube(lamp1)", cube);
 
         NameNode lamp2 = new NameNode("lamp2");
         m = Mat4Transform.translate((-lampScale/2) + lampScale/8 ,
@@ -57,7 +58,7 @@ public class Lamp {
                 0);
         m = Mat4.multiply(m, Mat4Transform.scale(armScale));
         TransformNode lamp2Transform = new TransformNode("lamp2 transform", m);
-        ModelNode lamp2Shape = new ModelNode("Cube(lamp2)", cube);
+        ModelNode lamp2Shape = new ModelNode("vertexes.Cube(lamp2)", cube);
 
         NameNode lampHead = new NameNode("lamp head");
         TransformNode lampHeadTranslate = new TransformNode("lamp head translate",
@@ -69,14 +70,14 @@ public class Lamp {
         m = Mat4.multiply(m, Mat4Transform.scale(headScale));
         m = Mat4.multiply(m, Mat4Transform.translate(0,0,0));
         TransformNode lampHeadScale = new TransformNode("lamp head scale", m);
-        ModelNode lampHeadShape = new ModelNode("Cube(lamp head)", cube);
+        ModelNode lampHeadShape = new ModelNode("vertexes.Cube(lamp head)", cube);
 
         NameNode lampBulb = new NameNode("lamp bulb");
         m = new Mat4(1);
         m = Mat4Transform.translate(0,0.5f,0);
         m = Mat4.multiply(m, Mat4Transform.scale(1,1,1));
         TransformNode lampBulbTransform = new TransformNode("lamp bulb transform", m);
-        ModelNode lampBulbShape = new ModelNode("Sphere(lamp bulb)", bulb);
+        ModelNode lampBulbShape = new ModelNode("vertexes.Sphere(lamp bulb)", bulb);
 
         lampRoot.addChild(lampMoveTranslate);
             lampMoveTranslate.addChild(lampTranslate);
