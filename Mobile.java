@@ -39,13 +39,13 @@ public class Mobile {
         ModelNode phoneShape = new ModelNode("vertexes.Cube(phone)", mobilePhone);
 
         phoneRoot.addChild(phoneMoveTranslate);
-        phoneMoveTranslate.addChild(phoneTranslate);
-        phoneTranslate.addChild(phoneBase);
-        phoneBase.addChild(phoneBaseTransform);
-        phoneBaseTransform.addChild(phoneBaseShape);
-        phoneBase.addChild(phone);
-        phone.addChild(phoneTransform);
-        phoneTransform.addChild(phoneShape);
+            phoneMoveTranslate.addChild(phoneTranslate);
+                phoneTranslate.addChild(phoneBase);
+                    phoneBase.addChild(phoneBaseTransform);
+                        phoneBaseTransform.addChild(phoneBaseShape);
+                    phoneBase.addChild(phone);
+                        phone.addChild(phoneTransform);
+                            phoneTransform.addChild(phoneShape);
 
         phoneRoot.update();
     }
