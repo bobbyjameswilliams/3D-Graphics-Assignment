@@ -1,6 +1,8 @@
 import gmaths.*;
 
 import com.jogamp.opengl.*;
+import utils.*;
+import vertexes.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -63,26 +65,13 @@ public class Museum_GLEventListener implements GLEventListener {
    *
    *
    */
-   
-  private boolean animation = false;
+
   private double savedTime = 0;
   private Robot robot;
   private Egg egg;
   private Mobile phone;
   private Lamp lamp;
 
-
-  public void startAnimation() {
-    animation = true;
-    startTime = getSeconds()-savedTime;
-  }
-
-
-  public void stopAnimation() {
-    animation = false;
-    double elapsedTime = getSeconds()-startTime;
-    savedTime = elapsedTime;
-  }
 
   public void outsideNight(){
     windowView.getMaterial().setAmbient(0.1f,0.1f,0.1f);
@@ -94,15 +83,6 @@ public class Museum_GLEventListener implements GLEventListener {
   public void outsideDay(){
     windowView.getMaterial().setAmbient(1f,1f,1f);
     windowView.getMaterial().setDiffuse(0.6f,0.6f,0.6f);
-  }
-
-
-  public void raisedArms() {
-    stopAnimation();
-    robot.leftFeelerRotate.setTransform(Mat4Transform.rotateAroundX(0));
-    robot.leftFeelerRotate.update();
-    robot.rightFeelerRotate.setTransform(Mat4Transform.rotateAroundX(0));
-    robot.rightFeelerRotate.update();
   }
 
 
@@ -160,7 +140,6 @@ public class Museum_GLEventListener implements GLEventListener {
    */
 
   private Camera camera;
-  private Mat4 perspective;
   private Model floor, sphere, eye, cube, box, mobilePhone, backwall, sidewall, windowView, lampStand, bulb;
   private List<Light> lights;
   private Light light;
@@ -171,7 +150,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Model initialise_floor(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     Mat4 modelMatrix = Mat4Transform.scale(roomSize,1f,roomSize);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture);
@@ -180,7 +159,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Model initialise_backwall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, DoorWall.vertices.clone(), DoorWall.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     Mat4 modelMatrix =  Mat4Transform.translate(0,(roomSize/3f),-(roomSize/2));
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
@@ -191,7 +170,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Model initialise_sidewall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, WindowedWall.vertices.clone(), WindowedWall.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
     Mat4 modelMatrix =  Mat4Transform.translate(-(roomSize/2),(roomSize/3),0);
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
@@ -201,9 +180,9 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
 
-  private Model initialise_skybox(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize, float relativeViewOffset){
+  private Model initialise_view(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize, float relativeViewOffset){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-    Shader shader = new Shader(gl, "vs_tt_05.glsl", "fs_tt_05.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(1f, 1f, 1f), new Vec3(0.6f, 0.6f, 0.6f), new Vec3(0.0f, 0.0f, 0.0f), 1.0f);
     Mat4 modelMatrix =  Mat4Transform.translate(-relativeViewOffset,(roomSize/2),0);
     modelMatrix = Mat4.multiply(modelMatrix, Mat4Transform.rotateAroundX(90));
@@ -215,7 +194,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Model initialise_sphere(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[] texture2){
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
@@ -223,7 +202,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Model initialise_sphere(GL3 gl, Camera camera, List<Light> lights){
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh);
@@ -232,7 +211,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Model initialise_cube(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
@@ -241,7 +220,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   private Model initialise_phone(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, PhoneCube.vertices.clone(), PhoneCube.indices.clone());
-    Shader shader = new Shader(gl, "vs_cube_04.glsl", "fs_cube_04.glsl");
+    Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), 32.0f);
     Mat4 modelMatrix = new Mat4(1);
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
@@ -257,15 +236,16 @@ public class Museum_GLEventListener implements GLEventListener {
     int[] windowViewTexture = TextureLibrary.loadTexture(gl, "textures/windowView.jpg");
     int[] phoneTexture = TextureLibrary.loadTexture(gl, "textures/cube.jpg");
     int[] phoneSpecular = TextureLibrary.loadTexture(gl, "textures/cube_specular.jpg");
-    int[] textureId1 = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
-    int[] textureId2 = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
+    int[] sphericalTexture = TextureLibrary.loadTexture(gl, "textures/jade.jpg");
+    int[] sphericalSpecular = TextureLibrary.loadTexture(gl, "textures/jade_specular.jpg");
     int[] boxTexture = TextureLibrary.loadTexture(gl, "textures/container2.jpg");
     int[] boxSpecular = TextureLibrary.loadTexture(gl, "textures/container2_specular.jpg");
     int[] bulbTexture = TextureLibrary.loadTexture(gl, "textures/bulb.jpg");
-    int[] textureId6 = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg");
+    int[] surfaceSpecular = TextureLibrary.loadTexture(gl, "textures/surface_specular.jpg");
     int[] lampStandTexture = TextureLibrary.loadTexture(gl, "textures/lampStand.jpg");
     int[] lampStandSpecular = TextureLibrary.loadTexture(gl,"textures/jup0vss1_specular.jpg");
 
+    //Lights init
     this.lights = new java.util.ArrayList<>(Collections.emptyList());
 
     light = new Light(gl);
@@ -282,7 +262,7 @@ public class Museum_GLEventListener implements GLEventListener {
     spotLight.setDirection(0,0,0);
     lights.add(spotLight);
 
-
+    //Room variables
     float roomSize = 40;
     float viewOffset = 8;
     float relativeViewOffset = (roomSize/2) + viewOffset;
@@ -294,15 +274,14 @@ public class Museum_GLEventListener implements GLEventListener {
     backwall = initialise_backwall(gl, camera, lights, wallTexture, roomSize);
     //windowed wall
     sidewall = initialise_sidewall(gl, camera, lights, wallTexture, roomSize);
-    //sky box
-    windowView = initialise_skybox(gl, camera, lights, windowViewTexture, roomSize, relativeViewOffset) ;
+    //view
+    windowView = initialise_view(gl, camera, lights, windowViewTexture, roomSize, relativeViewOffset) ;
 
 
-    //#################### ROBOT!!! ###############################
-    //robot body
-    sphere = initialise_sphere(gl,camera,lights,textureId1,textureId2);
-    cube = initialise_cube(gl,camera,lights,textureId1,textureId2);
-    eye = initialise_cube(gl,camera,lights,wallTexture,textureId6);
+    //Initialising Models
+    sphere = initialise_sphere(gl,camera,lights,sphericalTexture,sphericalSpecular);
+    cube = initialise_cube(gl,camera,lights,sphericalTexture,sphericalSpecular);
+    eye = initialise_cube(gl,camera,lights,wallTexture,surfaceSpecular);
 
     lampStand = initialise_cube(gl,camera,lights,lampStandTexture, lampStandSpecular);
     bulb = initialise_sphere(gl,camera,lights,bulbTexture,bulbTexture);
@@ -310,8 +289,8 @@ public class Museum_GLEventListener implements GLEventListener {
 
     box = initialise_cube(gl,camera,lights,boxTexture,boxSpecular);
     mobilePhone = initialise_phone(gl,camera,lights,phoneTexture,phoneSpecular);
-//
-//  //Creating classes for scene objects
+
+//  //Creating class instances for scene objects
     robot = new Robot(gl, cube,eye,sphere,startTime);
     egg = new Egg(gl, box, sphere);
     phone = new Mobile(gl,mobilePhone, box);
@@ -333,6 +312,7 @@ public class Museum_GLEventListener implements GLEventListener {
     sidewall.render(gl);
     windowView.render(gl);
 
+    //Calling render methods inside classes
     robot.render();
     egg.render();
     phone.render();
