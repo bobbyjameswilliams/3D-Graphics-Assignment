@@ -1,4 +1,9 @@
 #version 330 core
+/* I declare that this code is my own work */
+/* Author Bobby Williams bobby.james.williams@outlook.com */
+/* Extending The work of Steve Maddock s.maddock@sheffield.ac.uk, with some additions by Bobby Williams */
+
+
 
 in vec3 aPos;
 in vec3 aNormal;
@@ -64,9 +69,9 @@ void main() {
   totalSpecular = (totalSpecular + spotLight.specular * (spec * material.specular)) * spotLight.intensity_mod;
 
   // spotlight
-  float theta = dot(lightDir, normalize(-spotLight.direction));
-  float epsilon = (spotLight.cutOff - spotLight.outerCutOff);
-  float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0, 1.0);
+  float a = dot(lightDir, normalize(-spotLight.direction));
+  float b = (spotLight.cutOff - spotLight.outerCutOff);
+  float intensity = clamp((a - spotLight.outerCutOff) / b, 0.0, 1.0);
   totalDiffuse *= intensity;
   totalSpecular *= intensity;
 
