@@ -11,7 +11,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   public Museum_GLEventListener(Camera camera) {
     this.camera = camera;
-    this.camera.setPosition(new Vec3(4f,30f,40f));
+    this.camera.setPosition(new Vec3(-2f,15f,40f));
   }
   
   // ***************************************************
