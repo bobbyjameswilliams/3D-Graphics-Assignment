@@ -59,9 +59,20 @@ public class Museum_GLEventListener implements GLEventListener {
   /* Clean up memory, if necessary */
   public void dispose(GLAutoDrawable drawable) {
     GL3 gl = drawable.getGL().getGL3();
-    light.dispose(gl);
+    for (Light value : lights) {
+      value.dispose(gl);
+    }
     floor.dispose(gl);
     sphere.dispose(gl);
+    eye.dispose(gl);
+    cube.dispose(gl);
+    box.dispose(gl);
+    mobilePhone.dispose(gl);
+    backwall.dispose(gl);
+    sidewall.dispose(gl);
+    windowView.dispose(gl);
+    lampStand.dispose(gl);
+    bulb.dispose(gl);
   }
   
   
@@ -153,7 +164,7 @@ public class Museum_GLEventListener implements GLEventListener {
 
   //Initialise models
 
-  private Model initialise_floor(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
+  private Model initialiseFloor(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
@@ -162,7 +173,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
 
-  private Model initialise_backwall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
+  private Model initialiseBackwall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, DoorWall.vertices.clone(), DoorWall.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
@@ -173,7 +184,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
 
-  private Model initialise_sidewall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
+  private Model initialiseSidewall(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize){
     Mesh mesh = new Mesh(gl, WindowedWall.vertices.clone(), WindowedWall.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 99.0f);
@@ -185,7 +196,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
 
-  private Model initialise_view(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize, float relativeViewOffset){
+  private Model initialiseView(GL3 gl, Camera camera, List<Light> lights, int[] texture, float roomSize, float relativeViewOffset){
     Mesh mesh = new Mesh(gl, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_tt_05.glsl", "shaders/fs_tt_05.glsl");
     Material material = new Material(new Vec3(1f, 1f, 1f), new Vec3(0.6f, 0.6f, 0.6f), new Vec3(0.0f, 0.0f, 0.0f), 1.0f);
@@ -197,7 +208,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
 
-  private Model initialise_sphere(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[] texture2){
+  private Model initialiseSphere(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[] texture2){
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
@@ -205,7 +216,7 @@ public class Museum_GLEventListener implements GLEventListener {
     return new Model(gl, camera, lights, shader, material, modelMatrix, mesh, texture1, texture2);
   }
 
-  private Model initialise_sphere(GL3 gl, Camera camera, List<Light> lights){
+  private Model initialiseSphere(GL3 gl, Camera camera, List<Light> lights){
     Mesh mesh = new Mesh(gl, Sphere.vertices.clone(), Sphere.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
@@ -214,7 +225,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
 
-  private Model initialise_cube(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
+  private Model initialiseCube(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, Cube.vertices.clone(), Cube.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 0.5f, 0.31f), new Vec3(0.5f, 0.5f, 0.5f), 32.0f);
@@ -223,7 +234,7 @@ public class Museum_GLEventListener implements GLEventListener {
   }
 
 
-  private Model initialise_phone(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
+  private Model initialisePhone(GL3 gl, Camera camera, List<Light> lights, int[] texture1, int[]texture2){
     Mesh mesh = new Mesh(gl, PhoneCube.vertices.clone(), PhoneCube.indices.clone());
     Shader shader = new Shader(gl, "shaders/vs_cube_04.glsl", "shaders/fs_cube_04.glsl");
     Material material = new Material(new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), new Vec3(1.0f, 1.0f, 1.0f), 32.0f);
@@ -274,26 +285,26 @@ public class Museum_GLEventListener implements GLEventListener {
 
 
     //floor
-    floor = initialise_floor(gl, camera, lights, woodFloorTexture, roomSize);
+    floor = initialiseFloor(gl, camera, lights, woodFloorTexture, roomSize);
     //back wall
-    backwall = initialise_backwall(gl, camera, lights, wallTexture, roomSize);
+    backwall = initialiseBackwall(gl, camera, lights, wallTexture, roomSize);
     //windowed wall
-    sidewall = initialise_sidewall(gl, camera, lights, wallTexture, roomSize);
+    sidewall = initialiseSidewall(gl, camera, lights, wallTexture, roomSize);
     //view
-    windowView = initialise_view(gl, camera, lights, windowViewTexture, roomSize, relativeViewOffset) ;
+    windowView = initialiseView(gl, camera, lights, windowViewTexture, roomSize, relativeViewOffset) ;
 
 
     //Initialising Models
-    sphere = initialise_sphere(gl,camera,lights,sphericalTexture,sphericalSpecular);
-    cube = initialise_cube(gl,camera,lights,sphericalTexture,sphericalSpecular);
-    eye = initialise_cube(gl,camera,lights,wallTexture,surfaceSpecular);
+    sphere = initialiseSphere(gl,camera,lights,sphericalTexture,sphericalSpecular);
+    cube = initialiseCube(gl,camera,lights,sphericalTexture,sphericalSpecular);
+    eye = initialiseCube(gl,camera,lights,wallTexture,surfaceSpecular);
 
-    lampStand = initialise_cube(gl,camera,lights,lampStandTexture, lampStandSpecular);
-    bulb = initialise_sphere(gl,camera,lights,bulbTexture,bulbTexture);
+    lampStand = initialiseCube(gl,camera,lights,lampStandTexture, lampStandSpecular);
+    bulb = initialiseSphere(gl,camera,lights,bulbTexture,bulbTexture);
     bulb.getMaterial().setAmbient(255,255,0);
 
-    box = initialise_cube(gl,camera,lights,boxTexture,boxSpecular);
-    mobilePhone = initialise_phone(gl,camera,lights,phoneTexture,phoneSpecular);
+    box = initialiseCube(gl,camera,lights,boxTexture,boxSpecular);
+    mobilePhone = initialisePhone(gl,camera,lights,phoneTexture,phoneSpecular);
 
 //  //Creating class instances for scene objects
     robot = new Robot(gl, cube,eye,sphere,startTime);
