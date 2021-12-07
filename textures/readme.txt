@@ -9,3 +9,11 @@ jup0vss1.jpg
 mar0kuu2.jpg
 ven0aaa2.jpg
 
+https://pxhere.com/en/photo/920070
+wood_floor.jpg
+
+https://www.stockvault.net/
+wallTexture.jpg
+
+bobbyjameswilliams.co.uk
+windowview.jpg
